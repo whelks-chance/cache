@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                <h1>CaCHE is the UK’s Collaborative Centre for Housing Evidence</h1>
+                <p class="lead">A consortium of 12 partners led by the University of Glasgow. It is a five-year programme funded by the Economic and Social Research Council, Joseph Rowntree Foundation and the Arts and Humanities Research Council</p>
+            </div>
+            <div class="col-lg-4 col-md-5 col-sm-6">
+                <div class="sponsor">
+                    <a href="#">
+                        <img src="{% static 'img/media_553190_en.png' %}">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bs-docs-section clearfix">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-header">
+                    <h1 id="navbars">Search Housing Evidence Data</h1>
+                </div>
+
+                <div class="bs-component">
+                    <form action="{% url 'search_results' %}" method="get" role="search">
+                        <div class="form-group">
+                            <label class="col-form-label col-form-label-lg" for="inputLarge">Search here</label>
+                            <input class="form-control form-control-lg" type="text" id="inputLarge">
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

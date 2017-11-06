@@ -1,0 +1,18 @@
+.cache_yellow {
+    color: #FBC900;
+}
+
+.cache_grey {
+    color: #657786;
+}
+
+.navbar-brand img {
+    display: inline-block;
+    margin: 0 10px;
+    width: 1.5em;
+}
+
+img {
+    vertical-align: middle;
+    border-style: none;
+}
