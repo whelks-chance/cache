@@ -28,10 +28,12 @@ urlpatterns = [
     url(r'^base/', views.base),
     url(r'^example/', views.example),
 
-    url(r'^search/', views.search),
+    url(r'^search/', views.search, name='search'),
     url(r'^search_results/', views.search_results, name='search_results'),
 
-    url(r'^test/', views.test),
+    url(r'^test/', views.test, name='test'),
+
+    url(r'^eg1/', views.eg1, name='eg1'),
 
     url(regex=r'^%s(?P<path>.*)$' % settings.STATIC_URL[1:],
         view=serve,

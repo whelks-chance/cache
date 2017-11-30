@@ -20,3 +20,7 @@ def example(request):
 
 def search_results(request):
     return render(request, 'search_results.html', {'create_tech_form': 0})
+
+
+def eg1(request):
+    return render(request, './examples/index.html', {'create_tech_form': 0})

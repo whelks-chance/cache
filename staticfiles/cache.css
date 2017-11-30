@@ -3,7 +3,7 @@
 }
 
 .cache_grey {
-    color: #657786;
+    color: #696a6f;
 }
 
 .navbar-brand img {
@@ -15,4 +15,16 @@
 img {
     vertical-align: middle;
     border-style: none;
+}
+
+body {
+    background-color: #e6ecf0;
+}
+
+.bg-dark {
+    background-color: #2c313f !important
+}
+
+body {
+    font-family: "Arimo",sans-serif;
 }

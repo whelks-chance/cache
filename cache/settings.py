@@ -125,3 +125,12 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "staticfiles"),
     '/var/www/static/',
 ]
+
+ckan_api_key = ''
+ckan_org_name = ''
+ckan_user_name = ''
+
+try:
+    from cache.local_settings import *
+except ImportError:
+    pass
