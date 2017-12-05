@@ -28,3 +28,7 @@ body {
 body {
     font-family: "Arimo",sans-serif;
 }
+
+label {
+    font-weight: 700;
+}

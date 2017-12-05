@@ -23,6 +23,8 @@ from django.conf import settings
 from housing_portal import views
 
 urlpatterns = [
+    url(r'^$', views.eg1, name='home'),
+
     url(r'^admin/', admin.site.urls),
 
     url(r'^base/', views.base),
@@ -34,6 +36,10 @@ urlpatterns = [
     url(r'^test/', views.test, name='test'),
 
     url(r'^eg1/', views.eg1, name='eg1'),
+
+    url(r'^ckan/search', views.ckan_search, name='ckan_search'),
+
+    url(r'^ckan/resource', views.ckan_resource, name='ckan_resource'),
 
     url(regex=r'^%s(?P<path>.*)$' % settings.STATIC_URL[1:],
         view=serve,

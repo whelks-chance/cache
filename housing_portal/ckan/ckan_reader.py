@@ -1,3 +1,5 @@
+import pprint
+
 import ckanapi
 import requests
 
@@ -130,62 +132,87 @@ class CKANdata(RemoteDataDefault):
 
     def keyword_search(self, keyword_string, args=None):
 
-        found_datasets = []
+        all_data = []
 
         ckan_api = self.init()
 
         organization_list = ckan_api.action.organization_list(id=ckan_org_name, include_datasets=True)
 
-        print(organization_list)
+        print('organization_list\n', organization_list, '\n')
 
         organization_list_for_user = ckan_api.action.organization_list_for_user(id=ckan_user_name, include_datasets=True)
 
-        print(organization_list_for_user)
+        print('organization_list_for_user\n', organization_list_for_user, '\n')
 
         for user_org_name in organization_list:
             organization_show = ckan_api.action.organization_show(id=user_org_name, include_datasets=True)
-            print(organization_show)
-
+            print('organization_show\n', organization_show, '\n')
 
             for p in organization_show['packages']:
-                print('\n', p['id'])
+                print('p.keys\n', p.keys(), p['id'])
                 package_data = ckan_api.action.package_show(id=p['id'])
 
                 for r in package_data['resources']:
-                    print('\n\n', r)
-                    print('\n', r['package_id'], r['datastore_active'], r['id'])
+                    print('\n\nr\n', r)
+                    print('\nresource keys', r.keys(), '\n', r['package_id'], r['datastore_active'], r['id'])
+
+                    all_data.append(r)
 
                     if r['datastore_active']:
-                        found_datasets.append(
-                            {
+                            dat = {
                                 'id': r['id'],
                                 'name': r['name'],
                                 'source': 'CKAN_datahub'
                             }
-                        )
 
                     print(r['format'], type(r['format']))
                     if r['format'] == 'JPEG':
                         img_data = requests.get(r['url'], stream=True)
                         img_data.raw.decode_content = True  # handle spurious Content-Encoding
-                        img = Image.open(img_data.raw)
-                        img.show()
+                        # img = Image.open(img_data.raw)
+                        # img.show()
 
-        return found_datasets, None
+        return all_data
+
+    def get_resource_by_uuid(self, uuid):
+        ckan_api = self.init()
+
+        print(ckan_api.action)
+
+        uuid = ckan_api.action.resource_show(id=uuid)
+
+        # print(uuid)
+
+        return [uuid]
+
+    def get_resource_by_search_term(self, search_term):
+        ckan_api = self.init()
+
+        print(ckan_api.action)
+
+        uuid = ckan_api.action.package_search(q=search_term)
+
+        print(uuid)
+        return [uuid]
 
 
 if __name__ == '__main__':
-    import ssl
+    # import ssl
+    #
+    # print(ssl.OPENSSL_VERSION)
 
-    print(ssl.OPENSSL_VERSION)
-
-    datasets = []
     datahub_service = {}
     search_term = 'thingy'
 
     ckan_data = CKANdata()
-    ckan_datasets, ckan_request = ckan_data.keyword_search(search_term.lower())
-    datasets += ckan_datasets
+
+    # ckan_datasets = ckan_data.keyword_search(search_term.lower())
+    # ckan_datasets = ckan_data.get_resource_by_uuid('0211a7b2-76c2-40c2-a6f7-f36307915763')
+    ckan_datasets = ckan_data.get_resource_by_search_term('a')
+
+    datahub_service['data'] = ckan_datasets
     datahub_service['message'] = 'Success'
     # datahub_service['time'] = ckan_request.elapsed.total_seconds()
     datahub_service['success'] = True
+
+    print(pprint.pformat(datahub_service))
