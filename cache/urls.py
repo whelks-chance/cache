@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^search_results/', views.search_results, name='search_results'),
 
     url(r'^test/', views.test, name='test'),
+    url(r'^map_test/', views.map_test, name='map_test'),
 
     url(r'^eg1/', views.eg1, name='eg1'),
 

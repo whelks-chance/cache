@@ -71,3 +71,7 @@ def ckan_resource(request):
         'ckan_resource': datahub_service,
         'ckan_resource_uuid': ckan_resource_uuid
     })
+
+
+def map_test(request):
+    return render(request, 'map_test.html', {'create_tech_form': 0})

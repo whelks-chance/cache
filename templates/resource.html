@@ -25,8 +25,15 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <h3>{{ ckan_resource_uuid }}</h3>
+                <h3>CKAN UUID : {{ ckan_resource_uuid }}</h3>
             </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+
+            </div>
+
         </div>
 
         <div class="row">
@@ -42,11 +49,59 @@
                         <p class="form-control-static"><img src="{{ ckan_resource.data.0.url }}"></p>
                     </div>
                 {% endif %}
+
+                {% if ckan_resource.data.0.format == 'GeoJSON' %}
+                    <div id="map"
+                         style="width: 100%; height: 100%"
+                    ></div>
+                    <script src="http://d3js.org/d3.v2.min.js?2.9.3"></script>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+                    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css"/>
+
+
+                    <script src="https://rawgithub.com/kartena/Proj4Leaflet/master/lib/proj4-compressed.js"></script>
+                    <script src="https://rawgithub.com/kartena/Proj4Leaflet/master/src/proj4leaflet.js"></script>
+
+                    <script type="text/javascript">
+{#                        var epsg27700 = new L.Proj.CRS("EPSG:27700","+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.06,0.15,0.247,0.842,-20.489 +units=m +no_defs");#}
+{##}
+                        var map = L.map('map').setView([38.57, -94.71], 4);
+
+                        L.tileLayer('http://{s}.tile.cloudmade.com/9067860284bc491e92d2342cc51d47d9/998/256/{z}/{x}/{y}.png', {attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> Imagery © <a href="http://cloudmade.com">CloudMade</a>'}).addTo(map);
+
+                        var district_boundary = new L.geoJson();
+                        district_boundary.addTo(map);
+                        $.ajax({
+                            dataType: "json",
+                            url: "{{ ckan_resource.data.0.url }}",
+                            success: function(data) {
+                                $(data.features).each(function(key, data) {
+                                    district_boundary.addData(data);
+                                });
+                                map.fitBounds(district_boundary.getBounds(), { paddingBottomRight: [200, 0] });
+                                map.invalidateSize();
+                            }
+                        });
+
+{#                        setTimeout(function(){map.invalidateSize();}, 5000);#}
+
+
+                    </script>
+
+                {% endif %}
+
             </div>
             <div class="col-lg-6">
                 <div class="form-group">
                     <label>Description</label>
                     <p class="form-control-static">{{ ckan_resource.data.0.description }}</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Url</label>
+                    <p>
+                        <a href="{{ ckan_resource.data.0.url }}" class="form-control-static">{{ ckan_resource.data.0.url }}</a>
+                    </p>
                 </div>
 
                 <div class="form-group">
