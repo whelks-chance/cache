@@ -3,7 +3,7 @@ import pprint
 import ckanapi
 import requests
 
-from cache.settings import ckan_api_key, ckan_org_name, ckan_user_name
+from cache.settings import ckan_api_key, ckan_org_name, ckan_user_name, ckan_url
 from housing_portal.datasources.generic_source import RemoteDataDefault
 from PIL import Image
 
@@ -16,7 +16,7 @@ class CKANdata(RemoteDataDefault):
         if not self.ckan_api:
             self.ckan_api = ckanapi.RemoteCKAN(
                 # 'https://datahub.io',
-                'http://localhost:5000',
+                ckan_url,
                 user_agent='ckanapiexample/1.0 (+http://data.wiserd.ac.uk)',
                 apikey=ckan_api_key
             )

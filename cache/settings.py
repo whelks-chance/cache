@@ -129,6 +129,7 @@ STATICFILES_DIRS = [
 ckan_api_key = ''
 ckan_org_name = ''
 ckan_user_name = ''
+ckan_url = 'http://localhost:8983'
 
 try:
     from cache.local_settings import *
