@@ -133,8 +133,8 @@
                         "targets": -1,
                         "data": 'id',
                         "render": function ( data, type, full, meta ) {
-                            return "<a target='_blank' href='" + {% url 'ckan_resource' %} +
-                                    "?uuid=" + data + "' class='btn btn-success'>View</a>";
+                            return "<a target='_blank' href='{% url 'ckan_resource' %}?uuid=" +
+                                data + "' class='btn btn-success'>View</a>";
                         }
                     }
                 ]
