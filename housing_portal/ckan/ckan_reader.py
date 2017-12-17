@@ -154,16 +154,16 @@ class CKANdata(RemoteDataDefault):
 
                 for r in package_data['resources']:
                     print('\n\nr\n', r)
-                    print('\nresource keys', r.keys(), '\n', r['package_id'], r['datastore_active'], r['id'])
 
+                    print('\nresource keys', r.keys(), '\n', r['package_id'], r['id'])
+                    if 'datastore_active' in r:
+                        print('datastore_active', r['datastore_active'])
+                        dat = {
+                            'id': r['id'],
+                            'name': r['name'],
+                            'source': 'CKAN_datahub'
+                        }
                     all_data.append(r)
-
-                    if r['datastore_active']:
-                            dat = {
-                                'id': r['id'],
-                                'name': r['name'],
-                                'source': 'CKAN_datahub'
-                            }
 
                     print(r['format'], type(r['format']))
                     if r['format'] == 'JPEG':
