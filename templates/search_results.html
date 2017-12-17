@@ -134,7 +134,8 @@
                         "data": 'id',
                         "render": function ( data, type, full, meta ) {
                             return "<a target='_blank' " +
-                                "href='/ckan/resource?uuid=" + data + "' class='btn btn-success'>View</a>";
+                                "href='" + {% url 'ckan_resource' %} +
+                                    "?uuid=" + data + "' class='btn btn-success'>View</a>";
                         }
                     }
                 ]
