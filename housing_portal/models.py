@@ -31,6 +31,5 @@ class CacheSurvey(models.Model):
     class Meta:
         db_table = 'user_language'
 
-
     def __unicode__(self):
         return '{} : {}'.format(self.id, self.dataset_name)

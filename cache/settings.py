@@ -25,7 +25,7 @@ SECRET_KEY = '9y%8luvs_&4-5)iaeq!udmlr@1+*7*g_v-=npz%33povx59z&2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['cache-web-dev.cf.ac.uk']
 
 
 # Application definition
