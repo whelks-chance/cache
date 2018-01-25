@@ -81,7 +81,7 @@ class AddDataset:
 
         # Make the HTTP request.
         response = requests.post(
-            'http://0.0.0.0:5000/api/action/package_create',
+            settings.ckan_url + '/api/action/package_create',
             headers={
                 'Authorization': settings.ckan_api_key,
                 'content-type': 'application/json'
@@ -101,7 +101,7 @@ class AddDataset:
 
     def add_resource(self, filepath):
         response = requests.post(
-            'http://0.0.0.0:5000/api/action/resource_create',
+            settings.ckan_url + '/api/action/resource_create',
             data={"package_id": "my_dataset_name"},
             headers={"X-CKAN-API-Key": settings.ckan_api_key},
             files=[('upload', open(filepath, 'rb'))]
