@@ -53,7 +53,7 @@ class AddDataset:
                 r'[^\x61-\x7A]|\x40|\x55|\x137', r'',
                 tags['dataset_name'].lower().replace(' ', '-')
             ),
-            'owner_org': 'testorg',
+            'owner_org': settings.ckan_org_name,
 
             "license_title": None,
             "maintainer": None,
