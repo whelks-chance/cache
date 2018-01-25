@@ -1,4 +1,5 @@
 import json
+import pprint
 import re
 import requests
 from cache import settings
@@ -37,11 +38,21 @@ class AddDataset:
         extras = []
         for key, value in tags.items():
             print(key, value)
-            extras.append({
-                'key': key,
-                'value': value
-            })
+            if value:
+                extras.append({
+                    'key': key,
+                    'value': value
+                })
 
+        description = '{}\n\n{}\n\n{}\n\n{}\n\n{}\n\n{}\n\n{}'.format(
+            tags['category_notes'],
+            tags['dataset_content'],
+            tags['source_weblink'],
+            tags['time_notes'],
+            tags['data_type_notes'],
+            tags['data_quality'],
+            tags['data_access']
+        ).strip()
 # \x2D - minus
 # \x20 space
 # \x55 dash
@@ -74,7 +85,7 @@ class AddDataset:
             "license_id": None,
             "isopen": None,
             "url": None,
-            "notes": None,
+            "notes": description,
             "extras": extras,
             "title": tags['dataset_name'],
         }
@@ -98,13 +109,21 @@ class AddDataset:
         # package_create returns the created package as its result.
         # created_package = response_dict['result']
         # pprint.pprint(created_package)
+        return response.json()
 
-    def add_resource(self, filepath):
+    def add_resource(self, resource_name, dataset_name, filepath, url):
         response = requests.post(
             settings.ckan_url + '/api/action/resource_create',
-            data={"package_id": "my_dataset_name"},
-            headers={"X-CKAN-API-Key": settings.ckan_api_key},
-            files=[('upload', open(filepath, 'rb'))]
+            data=json.dumps({
+                "package_id": dataset_name,
+                "url": url,
+                "name": resource_name
+            }),
+            headers={
+                "X-CKAN-API-Key": settings.ckan_api_key,
+                'content-type': 'application/json'
+            }
+            # files=[('upload', open(filepath, 'rb'))]
         )
         print(response.text)
 
@@ -137,7 +156,24 @@ if __name__ == '__main__':
         'data_owner_attitude_to_research_use': '',
         'other_notes': ''
     }
-    ad.add_dataset({}, tags)
+    response = ad.add_dataset({}, tags)
+    dataset_name = ''
+    try:
+        print('Added', response['result']['name'])
+        pprint.pformat(response)
+        dataset_name = response['result']['name']
+
+    except:
+        dataset_name = re.sub(
+                r'[^\x61-\x7A]|\x40|\x55|\x137', r'',
+                tags['dataset_name'].lower().replace(' ', '-')
+            )
 
     filepath = '/home/ianh/PycharmProjects/cache/housing_portal/ckan/metadata.csv'
-    # ad.add_resource(filepath)
+    ad.add_resource(
+        "Source - weblink",
+        dataset_name,
+        filepath,
+        tags['source_weblink']
+    )
+
