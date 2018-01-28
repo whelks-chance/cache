@@ -1,3 +1,4 @@
+import csv
 import json
 import pprint
 import re
@@ -33,36 +34,47 @@ class AddDataset:
             'other_notes': ''
         }
 
-    def add_dataset(self, metadata, tags):
+    def convert(self, name):
+        s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+        return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower().replace(' ', '_')
 
+    def add_dataset(self, metadata, tags):
+        description_keys = [
+            'category_notes',
+            'dataset_content',
+            'source_weblink',
+            'time_notes',
+            'data_type_notes',
+            'data_quality',
+            'data_access'
+        ]
+
+        description = ''
         extras = []
+        tags_cleaned = {}
+
         for key, value in tags.items():
-            print(key, value)
+            print('converting', key, self.convert(key), value)
             if value:
                 extras.append({
-                    'key': key,
+                    'key': self.convert(key),
                     'value': value
                 })
+                tags_cleaned[self.convert(key)] = value
+                if self.convert(key) in description_keys:
+                    description += '\n\n' + value
+        description = description.strip()
 
-        description = '{}\n\n{}\n\n{}\n\n{}\n\n{}\n\n{}\n\n{}'.format(
-            tags['category_notes'],
-            tags['dataset_content'],
-            tags['source_weblink'],
-            tags['time_notes'],
-            tags['data_type_notes'],
-            tags['data_quality'],
-            tags['data_access']
-        ).strip()
-# \x2D - minus
-# \x20 space
-# \x55 dash
-# \x137 underscore
-#         TODO add allowed chars back into this regex
+        # \x2D - minus
+        # \x20 space
+        # \x55 dash
+        # \x137 underscore
+        #         TODO add allowed chars back into this regex
 
         dataset_dict = {
             'name': re.sub(
                 r'[^\x61-\x7A]|\x40|\x55|\x137', r'',
-                tags['dataset_name'].lower().replace(' ', '-')
+                tags_cleaned['dataset_name'].lower().replace(' ', '-')
             ),
             'owner_org': settings.ckan_org_name,
 
@@ -87,7 +99,7 @@ class AddDataset:
             "url": None,
             "notes": description,
             "extras": extras,
-            "title": tags['dataset_name'],
+            "title": tags_cleaned['dataset_name'],
         }
 
         # Make the HTTP request.
@@ -127,9 +139,26 @@ class AddDataset:
         )
         print(response.text)
 
+    def add_csv_dataset(self, csv_filepath):
+        with open(csv_filepath,  'r', encoding="latin-1") as csv_file:
+            dialect = csv.Sniffer().sniff(csv_file.read(1024))
+            csv_file.seek(0)
+            print('dialect', dialect)
+            dr = csv.DictReader(csv_file)
+            print(dr.fieldnames)
+
+            for row in dr:
+                for field in dr.fieldnames:
+                    print(field, ":", row[field])
+                ad.add_dataset({}, row)
+
 
 if __name__ == '__main__':
+
     ad = AddDataset()
+
+    ad.add_csv_dataset('./metadata.csv')
+    exit()
 
     tags = {
         'timestamp': '12/15/2015 17:22:29',
@@ -165,9 +194,9 @@ if __name__ == '__main__':
 
     except:
         dataset_name = re.sub(
-                r'[^\x61-\x7A]|\x40|\x55|\x137', r'',
-                tags['dataset_name'].lower().replace(' ', '-')
-            )
+            r'[^\x61-\x7A]|\x40|\x55|\x137', r'',
+            tags['dataset_name'].lower().replace(' ', '-')
+        )
 
     filepath = '/home/ianh/PycharmProjects/cache/housing_portal/ckan/metadata.csv'
     ad.add_resource(

@@ -144,12 +144,13 @@ class CKANdata(RemoteDataDefault):
 
         print('organization_list_for_user\n', organization_list_for_user, '\n')
 
-        for user_org_name in organization_list:
+        for user_org in organization_list_for_user:
+            user_org_name = user_org['name']
             organization_show = ckan_api.action.organization_show(id=user_org_name, include_datasets=True)
-            print('organization_show\n', organization_show, '\n')
+            # print('organization_show\n', organization_show, '\n')
 
             for p in organization_show['packages']:
-                print('p.keys\n', p.keys(), p['id'])
+                # print('p.keys\n', p.keys(), p['id'])
                 package_data = ckan_api.action.package_show(id=p['id'])
 
                 for r in package_data['resources']:
