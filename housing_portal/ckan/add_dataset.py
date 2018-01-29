@@ -10,6 +10,8 @@ import math
 import requests
 import sys
 
+import time
+
 from cache import settings
 
 
@@ -187,6 +189,8 @@ class AddDataset:
 
             count = 0
             for row in dr:
+                print('Waiting for a second')
+                time.sleep(1)
                 count += 1
                 if limit and count > limit:
                     break
