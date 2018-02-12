@@ -1,6 +1,6 @@
 import json
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 
 
@@ -50,7 +50,13 @@ def ckan_search(request):
     else:
         datahub_service['message'] = 'Failure - requires a search term'
         datahub_service['success'] = False
+        datahub_service['error_text'] = 'No search term given'
+        datahub_service['data'] = []
 
+    # import time
+    # time.sleep(9999)
+
+    # return HttpResponseNotFound('<h1>Page not found</h1>')
     return HttpResponse(json.dumps(datahub_service, indent=4), content_type="application/json")
 
 

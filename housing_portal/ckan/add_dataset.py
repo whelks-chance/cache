@@ -3,13 +3,9 @@ import getopt
 import json
 import pprint
 import re
-
 import os
-
-import math
 import requests
 import sys
-
 import time
 
 from cache import settings

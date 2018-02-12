@@ -25,7 +25,7 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <h3>{{ search_term }}</h3>
+                <h3>Showing results for : {{ search_term }}</h3>
             </div>
         </div>
 
@@ -97,16 +97,40 @@
 
 
     <script type="text/javascript" src="{% static 'js/search_results.js' %}"></script>
-{#    <script src="{% static 'jquery/jquery.min.js' %}"></script>#}
-{#    <script src="{% static 'datatables/jquery.dataTables.min.js' %}"></script>#}
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    {#    <script src="{% static 'jquery/jquery.min.js' %}"></script>#}
+    {#        <script src="{% static 'datatables/jquery.dataTables.min.js' %}"></script>#}
+    {#    <script type="text/javascript" src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>#}
+    {#        <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />#}
+
+
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-colvis-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/cr-1.4.1/fc-3.2.4/fh-3.1.3/kt-2.3.2/r-2.2.1/rg-1.0.2/rr-1.2.3/sc-1.4.4/sl-1.2.5/datatables.min.css"/>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.16/af-2.2.2/b-1.5.1/b-colvis-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/cr-1.4.1/fc-3.2.4/fh-3.1.3/kt-2.3.2/r-2.2.1/rg-1.0.2/rr-1.2.3/sc-1.4.4/sl-1.2.5/datatables.min.js"></script>
+
+
+
+    <link rel="stylesheet" type="text/css" href="{% static 'fontawesome-pro-5.0.6/svg-with-js/css/fa-svg-with-js.css' %}"/>
+    <script src="{% static 'fontawesome-pro-5.0.6/svg-with-js/js/fontawesome-all.js' %}"></script>
+
+
     <script type="text/javascript" src="{% static 'moment/moment-with-locales.min.js' %}"></script>
 
     <script>
+
+
         $(document).ready(function(){
             var survey_table = $('#results_table').DataTable({
                 serverSide: false,
                 processing: true,
+                language: {
+                    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span> '
+                },
+                {#                dataFilter: function (res) {#}
+                {#                    debugger;#}
+                {#                },#}
                 "bAutoWidth": false,
                 responsive: true,
                 "pageLength": 30,
@@ -116,26 +140,46 @@
                     type: 'GET',
                     data: function (d) {},
                     dataSrc: function ( json ) {
+                        if(json['data'].length == 0 && json['error_text']) {
+                            alert(json['error_text'])
+                        }
                         return json['data'];
+                    },
+                    error:function( xhr, textStatus, error ) {
+                        if ( textStatus === 'timeout' ) {
+                            alert( 'The server took too long to send the data.' );
+                        }
+                        else {
+                            alert( 'An error occurred on the server. Please try again in a minute.' );
+                        }
                     }
                 },
                 columns: [
-{
+                    {
                         "targets": -1,
                         "data": 'created',
                         "render": function ( data, type, full, meta ) {
+                            console.log(data);
                             return new moment(data).format('do MMMM YYYY');
-                        }
+                        },
+                        "defaultContent": "0"
                     },
-                    {'data': 'format'},
-                    {'data': 'description'},
+                    {
+                        'data': 'format',
+                        "defaultContent": "0"
+                    },
+                    {
+                        'data': 'description',
+                        "defaultContent": "0"
+                    },
                     {
                         "targets": -1,
                         "data": 'id',
                         "render": function ( data, type, full, meta ) {
                             return "<a target='_blank' href='{% url 'ckan_resource' %}?uuid=" +
                                 data + "' class='btn btn-success'>View</a>";
-                        }
+                        },
+                        "defaultContent": "0"
                     }
                 ]
             });
