@@ -65,8 +65,8 @@ def ckan_resource(request):
     datahub_service = {}
     if ckan_resource_uuid:
         ckan_data = CKANdata()
-        ckan_datasets = ckan_data.get_resource_by_uuid(ckan_resource_uuid)
-        datahub_service['data'] = ckan_datasets
+        ckan_resources = ckan_data.get_resource_by_uuid(ckan_resource_uuid)
+        datahub_service['data'] = ckan_resources
         datahub_service['message'] = 'Success'
         datahub_service['success'] = True
     else:
@@ -81,3 +81,37 @@ def ckan_resource(request):
 
 def map_test(request):
     return render(request, 'map_test.html', {'create_tech_form': 0})
+
+
+def clean_str(string):
+    return string.replace('_-_', '_')
+
+
+def cleanup(ckan_datasets):
+    for idx, d in enumerate(ckan_datasets):
+        cleaned = {}
+        print(ckan_datasets[idx]['extras'])
+        for e in ckan_datasets[idx]['extras']:
+            key = clean_str(e['key'])
+            value = clean_str(e['value'])
+            cleaned[key] = value
+        ckan_datasets[idx]['extras_cleaned'] = cleaned
+    return ckan_datasets
+
+def ckan_dataset(request):
+    ckan_resource_uuid = request.GET.get('uuid', 'MISSING CKAN RESOURCE UUID')
+    datahub_service = {}
+    if ckan_resource_uuid:
+        ckan_data = CKANdata()
+        ckan_datasets = ckan_data.get_dataset_by_uuid(ckan_resource_uuid)
+        datahub_service['data'] = cleanup(ckan_datasets)
+        datahub_service['message'] = 'Success'
+        datahub_service['success'] = True
+    else:
+        datahub_service['message'] = 'Failure - requires a search term'
+        datahub_service['success'] = False
+
+    return render(request, 'ckan_dataset.html', {
+        'ckan_dataset': datahub_service,
+        'ckan_dataset_uuid': ckan_resource_uuid,
+    })

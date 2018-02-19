@@ -32,3 +32,11 @@ body {
 label {
     font-weight: 700;
 }
+
+.dataTables_processing {
+    border-radius: 2.5em;
+}
+
+.country_img {
+    width: 14em;
+}

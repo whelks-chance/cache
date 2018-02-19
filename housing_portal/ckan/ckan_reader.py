@@ -175,6 +175,17 @@ class CKANdata(RemoteDataDefault):
 
         return all_data
 
+    def get_dataset_by_uuid(self, uuid):
+        ckan_api = self.init()
+
+        print(ckan_api.action)
+
+        uuid = ckan_api.action.package_show(id=uuid)
+
+        # print(uuid)
+
+        return [uuid]
+
     def get_resource_by_uuid(self, uuid):
         ckan_api = self.init()
 

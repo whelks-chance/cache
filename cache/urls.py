@@ -41,6 +41,7 @@ urlpatterns = [
     #   Be careful not to let nginx forward this to the actual ckan server
     url(r'^local_ckan/search', views.ckan_search, name='ckan_search'),
     url(r'^local_ckan/resource', views.ckan_resource, name='ckan_resource'),
+    url(r'^local_ckan/dataset', views.ckan_dataset, name='ckan_dataset'),
 
     url(regex=r'^%s(?P<path>.*)$' % settings.STATIC_URL[1:],
         view=serve,
