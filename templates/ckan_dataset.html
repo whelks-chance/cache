@@ -6,10 +6,10 @@
 
     <script>
         $(document).ready(function(){
-            var from_date = new moment('{{ ckan_dataset.data.0.extras_cleaned.time_period_from }}');
+            var from_date = new moment('{{ ckan_dataset.data.0.extras_cleaned.time_period_from|escapejs }}');
 
-{#            alert(from_date.format('do MMMM YYYY'));#}
-            var time_period_to = '{{ ckan_dataset.data.0.extras_cleaned.time_period_to }}';
+            {#            alert(from_date.format('do MMMM YYYY'));#}
+            var time_period_to = '{{ ckan_dataset.data.0.extras_cleaned.time_period_to|escapejs }}';
 
             var to_date = new moment();
             if (time_period_to != 'On-going') {
@@ -19,14 +19,14 @@
             var range = to_date.diff(from_date, 'years');
 
             var range_text = '';
-            var time_frequency = '{{ ckan_dataset.data.0.extras_cleaned.time_frequency }}'.trim();
+            var time_frequency = '{{ ckan_dataset.data.0.extras_cleaned.time_frequency|escapejs }}'.trim();
             if (time_frequency == 'Other' || time_frequency == '') {
                 range_text += 'For ' + range + ' years. '
             } else {
                 range_text += time_frequency + ' for ' + range + ' years. '
             }
 
-            var time_notes = '{{ ckan_dataset.data.0.extras_cleaned.time_notes }}';
+            var time_notes = "{{ ckan_dataset.data.0.extras_cleaned.time_notes|escapejs }}";
             if (time_notes == 'Other' || time_notes == '') {
 //
             } else {
@@ -34,9 +34,9 @@
 
             }
 
-{#            alert(to_date.format('do MMMM YYYY'));#}
+            {#            alert(to_date.format('do MMMM YYYY'));#}
 
-{#            alert(to_date.diff(from_date, 'years'));#}
+            {#            alert(to_date.diff(from_date, 'years'));#}
             $('#date_range').text(range_text)
         });
     </script>
@@ -46,17 +46,21 @@
             <div class="col-lg-8 col-md-7 col-sm-6">
                 <h1>{{ ckan_dataset.data.0.title }}</h1>
                 <p class="lead">{{ ckan_dataset.data.0.extras_cleaned.dataset_content }}</p>
+
+                {% if ckan_dataset.data.0.extras_cleaned.source_weblink %}
+                    <a href="{{ ckan_dataset.data.0.extras_cleaned.source_weblink }}" target="_blank">{{ ckan_dataset.data.0.extras_cleaned.source_weblink }}</a>
+                {% endif %}
             </div>
             <div class="col-lg-4 col-md-5 col-sm-6">
                 {% for e in ckan_dataset.data.0.extras %}
                     {% if e.key == 'geographic_coverage' and e.value == '1 - UK' %}
                         <img src="{% static 'img/UK_Outline_and_Flag.svg' %}" class="country_img">
                     {% endif %}
-                    {% if e.key == 'geographic_coverage' and e.value == '2' %}
-                        <img src="{% static 'img/scotland-23505_1280.png' %}" class="country_img">
+                    {% if e.key == 'geographic_coverage' and e.value == '2 - GB' %}
+                        <img src="{% static 'img/gb.png' %}" class="country_img">
                     {% endif %}
                     {% if e.key == 'geographic_coverage' and e.value == '3 - Eng & Wal' %}
-                        <img src="{% static 'img/scotland-23505_1280.png' %}" class="country_img">
+                        <img src="{% static 'img/england_and_wales.png' %}" class="country_img">
                     {% endif %}
                     {% if e.key == 'geographic_coverage' and e.value == '4 - England' %}
                         <img src="{% static 'img/blank-map-england.png' %}" class="country_img">
@@ -68,23 +72,23 @@
                         <img src="{% static 'img/scotland-23505_1280.png' %}" class="country_img">
                     {% endif %}
                     {% if e.key == 'geographic_coverage' and e.value == '7 - Northern Ireland' %}
-                        <img src="{% static 'img/BIThumbMap_NI.png' %}" class="country_img">
+                        <img src="{% static 'img/ni.png' %}" class="country_img">
                     {% endif %}
                 {% endfor %}
                 <p>Geographic Coverage : {{ ckan_dataset.data.0.extras_cleaned.geographic_coverage }}</p>
+                <p>Geographic Units : {{ ckan_dataset.data.0.extras_cleaned.geographic_units }}</p>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-6">
                 <h3>Info</h3>
                 <p>{{ ckan_dataset.data.0.extras_cleaned.category_notes }}</p>
                 <p>{{ ckan_dataset.data.0.extras_cleaned.data_quality }}</p>
-                <p>{{ ckan_dataset.data.0.extras_cleaned.time_notes }}</p>
                 <p>{{ ckan_dataset.data.0.extras_cleaned.data_type_notes }}</p>
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <h3>Access and Usage</h3>
                 <p>Data type : {{ ckan_dataset.data.0.extras_cleaned.data_type }}</p>
                 <p>{{ ckan_dataset.data.0.extras_cleaned.data_access }}</p>
@@ -99,6 +103,7 @@
 
         <div class="row">
             <div class="col-lg-4">
+                <h3>Frequency</h3>
                 <p>{{ ckan_dataset.data.0.extras_cleaned.time_period_from }} -
                     {{ ckan_dataset.data.0.extras_cleaned.time_period_to }}</p>
             </div>
@@ -107,31 +112,54 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Resources</h3>
+                <table class="table table-striped table-hover table-bordered" id="package_table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Format</th>
+                        <th>Goto Resource</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for r in ckan_dataset.data.0.resources %}
+                        <tr>
+                            <td>{{ r.name }}</td>
+                            <td>{{ r.format }}</td>
+                            <td><a target='_blank' href='{% url 'ckan_resource' %}?uuid={{ r.id }}' class='btn btn-success'>View</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    {% for i in ckan_dataset.data %}
-
-        {% for e in i.extras %}
-            <p style="color: lightblue">{{ e.key }}</p>
-            <p style="color: darkblue">{{ e.value }}</p>
-        {% endfor %}
-
-        {% for k, v in i.items %}
-            <p style="color: red">{{ k }}</p>
-            <p style="color: green">{{ v }}</p>
-        {% endfor %}
-
-        {% for r in i.resources %}
-            {% for k, v in r.items %}
-                <p style="color: orange">{{ k }}</p>
-                <p style="color: purple">{{ v }}</p>
-            {% endfor %}
-        {% endfor %}
-
-    {% endfor %}
-
-    {{ ckan_dataset }}
-
-    {{ ckan_dataset_uuid }}
+{#    {% for i in ckan_dataset.data %}#}
+{##}
+{#        {% for e in i.extras %}#}
+{#            <p style="color: lightblue">{{ e.key }}</p>#}
+{#            <p style="color: darkblue">{{ e.value }}</p>#}
+{#        {% endfor %}#}
+{##}
+{#        {% for k, v in i.items %}#}
+{#            <p style="color: red">{{ k }}</p>#}
+{#            <p style="color: green">{{ v }}</p>#}
+{#        {% endfor %}#}
+{##}
+{#        {% for r in i.resources %}#}
+{#            {% for k, v in r.items %}#}
+{#                <p style="color: orange">{{ k }}</p>#}
+{#                <p style="color: purple">{{ v }}</p>#}
+{#            {% endfor %}#}
+{#        {% endfor %}#}
+{##}
+{#    {% endfor %}#}
+{##}
+{#    {{ ckan_dataset }}#}
+{##}
+{#    {{ ckan_dataset_uuid }}#}
 
 {% endblock %}

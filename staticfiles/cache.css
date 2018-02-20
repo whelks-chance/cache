@@ -40,3 +40,16 @@ label {
 .country_img {
     width: 14em;
 }
+
+[class^="col-"] {
+    background-color: #f8f9fa;
+        padding-top: 0.5em;
+
+    /*margin-top: 1em;*/
+    /*margin-left: 1em;*/
+    /*margin-right: 1em;*/
+}
+
+.row {
+    padding-bottom: 1em;
+}

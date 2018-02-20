@@ -24,19 +24,6 @@
     <div class="bs-docs-section clearfix">
 
         <div class="row">
-            <div class="col-lg-12">
-                <h3>CKAN UUID : {{ ckan_resource_uuid }}</h3>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-12">
-
-            </div>
-
-        </div>
-
-        <div class="row">
             <div class="col-lg-6">
                 <div class="form-group">
                     <label>Name</label>
@@ -106,8 +93,19 @@
 
                 <div class="form-group">
                     <label>Full data dictionary</label>
-                    <p class="form-control-static">{{ ckan_resource }}</p>
+{#                    <p class="form-control-static">{{ ckan_resource }}</p>#}
+                    {% for k, v in ckan_resource.data.0.items %}
+                        {% if v %}
+                            <p>{{ k }} : {{ v }}</p>
+                        {% endif %}
+                    {% endfor %}
                 </div>
+            </div>
+        </div>
+
+    <div class="row">
+            <div class="col-lg-12">
+                <p>CKAN UUID : {{ ckan_resource_uuid }}</p>
             </div>
         </div>
     </div>
