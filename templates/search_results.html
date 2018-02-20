@@ -161,14 +161,14 @@
                 serverSide: false,
                 processing: true,
                 language: {
-                    processing: '<img style="height: 8em" src="https://i.imgur.com/M1UFzYg.gif">',
+                    processing: '<img style="height: 8em" src="https://i.imgur.com/M1UFzYg.gif">'
                 },
                 "bAutoWidth": false,
                 responsive: true,
                 "pageLength": 30,
                 {#                "oLanguage": datatables_language,#}
                 ajax: {
-                    url: "http://localhost:5000/api/3/action/package_search?q={{ search_term }}&include_private=true&rows=100",
+                    url: "http://cache-web-dev.cf.ac.uk:5000/api/3/action/package_search?q={{ search_term }}&include_private=true&rows=100",
                     type: 'GET',
                     cache: true,
 {#                    headers: {#}
