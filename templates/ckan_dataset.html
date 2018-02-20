@@ -54,7 +54,7 @@
             <div class="col-lg-4 col-md-5 col-sm-6">
                 {% for e in ckan_dataset.data.0.extras %}
                     {% if e.key == 'geographic_coverage' and e.value == '1 - UK' %}
-                        <img src="{% static 'img/UK_Outline_and_Flag.svg' %}" class="country_img">
+                        <img src="{% static 'img/blank.png' %}" class="country_img">
                     {% endif %}
                     {% if e.key == 'geographic_coverage' and e.value == '2 - GB' %}
                         <img src="{% static 'img/gb.png' %}" class="country_img">
