@@ -168,14 +168,14 @@
                 "pageLength": 30,
                 {#                "oLanguage": datatables_language,#}
                 ajax: {
-                    url: "http://cache-web-dev.cf.ac.uk/ckan/api/3/action/package_search?q={{ search_term }}&include_private=true&rows=100",
+                    url: "/ckan/api/3/action/package_search?q={{ search_term }}&include_private=true&rows=100",
                     type: 'GET',
                     cache: true,
 {#                    headers: {#}
 {#                'api-key':'CSDP-001',#}
 {#                'accept':'application/json'#}
 {#            },#}
-                                    crossDomain: true,
+                    crossDomain: true,
 
                     data: function (d) {},
                     dataSrc: function ( json ) {

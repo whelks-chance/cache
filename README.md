@@ -15,3 +15,16 @@ virtualenv -p python3 --no-site-packages venv_cache
 
 /opt/django/cache/
 /opt/django/venv_cache/
+
+### CKAN settings
+
+Create a local_settings.py file, next to settings.py, and add (assuming nginx is setup as such)
+
+```
+ckan_url = 'http://localhost/ckan'
+```
+
+## FAQ
+
+### Connection aborted.', BadStatusLine("''",)
+ckan library is trying to read the public uwsgi endpoint at localhost:5000, instead of http://localhost/ckan
