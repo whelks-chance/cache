@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 
 # Create your views here.
-from housing_portal.ckan.ckan_reader import CKANdata
+from housing_portal.ckan_tools.ckan_reader import CKANdata
 
 
 def search(request):

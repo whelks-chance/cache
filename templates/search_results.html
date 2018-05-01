@@ -17,6 +17,9 @@
                     </a>
                 </div>
             </div>
+            <div>
+                {{ API_URL }}
+            </div>
         </div>
     </div>
 
@@ -44,20 +47,20 @@
                     </table>
                 </div>
 
-                <div class="bs-component">
-                    <table class="table table-striped table-hover table-bordered" id="results_table">
-                        <thead class="thead-dark">
-                        <tr>
-                            <th>Date</th>
-                            <th>Data Type</th>
-                            <th>Dataset desciption</th>
-                            <th>View</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
+{#                <div class="bs-component">#}
+{#                    <table class="table table-striped table-hover table-bordered" id="results_table">#}
+{#                        <thead class="thead-dark">#}
+{#                        <tr>#}
+{#                            <th>Date</th>#}
+{#                            <th>Data Type</th>#}
+{#                            <th>Dataset desciption</th>#}
+{#                            <th>View</th>#}
+{#                        </tr>#}
+{#                        </thead>#}
+{#                        <tbody>#}
+{#                        </tbody>#}
+{#                    </table>#}
+{#                </div>#}
             </div>
         </div>
     </div>
@@ -89,72 +92,72 @@
 
 
         $(document).ready(function(){
-            var survey_table = $('#results_table').DataTable({
-                serverSide: false,
-                processing: true,
-                language: {
-                    processing:
+{#            var survey_table = $('#results_table').DataTable({#}
+{#                serverSide: false,#}
+{#                processing: true,#}
+{#                language: {#}
+{#                    processing:#}
 {#                        '<img style="height: 8em" src="http://i.imgur.com/0kvtMLE.gif">'#}
-                    '<img style="height: 8em" src="https://i.imgur.com/M1UFzYg.gif">'
-
+{#                    '<img style="height: 8em" src="https://i.imgur.com/M1UFzYg.gif">'#}
+{##}
 {#                    https://i.imgur.com/M1UFzYg.gif#}
 {#                    '</img><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span> '#}
-                },
+{#                },#}
                 {#                dataFilter: function (res) {#}
                 {#                    debugger;#}
                 {#                },#}
-                "bAutoWidth": false,
-                responsive: true,
-                "pageLength": 30,
+{#                "bAutoWidth": false,#}
+{#                responsive: true,#}
+{#                "pageLength": 30,#}
                 {#                "oLanguage": datatables_language,#}
-                ajax: {
-                    url: "{% url 'ckan_search'%}?search_term={{ search_term }}",
-                    type: 'GET',
-                    data: function (d) {},
-                    dataSrc: function ( json ) {
-                        if(json['data'].length == 0 && json['error_text']) {
-                            alert(json['error_text'])
-                        }
-                        return json['data'];
-                    },
-                    error:function( xhr, textStatus, error ) {
-                        if ( textStatus === 'timeout' ) {
-                            alert( 'The server took too long to send the data.' );
-                        }
-                        else {
-                            alert( 'An error occurred on the server. Please try again in a minute.' );
-                        }
-                    }
-                },
-                columns: [
-                    {
-                        "targets": -1,
-                        "data": 'created',
-                        "render": function ( data, type, full, meta ) {
+{#                ajax: {#}
+{#                    url: "{% url 'ckan_search'%}?search_term={{ search_term }}",#}
+{#                    type: 'GET',#}
+{#                    data: function (d) {},#}
+{#                    dataSrc: function ( json ) {#}
+{#                        if(json['data'].length == 0 && json['error_text']) {#}
+{#                            alert(json['error_text'])#}
+{#                        }#}
+{#                        return json['data'];#}
+{#                    },#}
+{#                    error:function( xhr, textStatus, error ) {#}
+{#                        if ( textStatus === 'timeout' ) {#}
+{#                            alert( 'The server took too long to send the data.' );#}
+{#                        }#}
+{#                        else {#}
+{#                            alert( 'An error occurred on the server. Please try again in a minute.' );#}
+{#                        }#}
+{#                    }#}
+{#                },#}
+{#                columns: [#}
+{#                    {#}
+{#                        "targets": -1,#}
+{#                        "data": 'created',#}
+{#                        "render": function ( data, type, full, meta ) {#}
 {#                            console.log(data);#}
-                            return new moment(data).format('do MMMM YYYY');
-                        },
-                        "defaultContent": "0"
-                    },
-                    {
-                        'data': 'format',
-                        "defaultContent": "0"
-                    },
-                    {
-                        'data': 'description',
-                        "defaultContent": "0"
-                    },
-                    {
-                        "targets": -1,
-                        "data": 'id',
-                        "render": function ( data, type, full, meta ) {
-                            return "<a target='_blank' href='{% url 'ckan_resource' %}?uuid=" +
-                                data + "' class='btn btn-success'>View</a>";
-                        },
-                        "defaultContent": "0"
-                    }
-                ]
-            });
+{#                            return new moment(data).format('do MMMM YYYY');#}
+{#                        },#}
+{#                        "defaultContent": "0"#}
+{#                    },#}
+{#                    {#}
+{#                        'data': 'format',#}
+{#                        "defaultContent": "0"#}
+{#                    },#}
+{#                    {#}
+{#                        'data': 'description',#}
+{#                        "defaultContent": "0"#}
+{#                    },#}
+{#                    {#}
+{#                        "targets": -1,#}
+{#                        "data": 'id',#}
+{#                        "render": function ( data, type, full, meta ) {#}
+{#                            return "<a target='_blank' href='{% url 'ckan_resource' %}?uuid=" +#}
+{#                                data + "' class='btn btn-success'>View</a>";#}
+{#                        },#}
+{#                        "defaultContent": "0"#}
+{#                    }#}
+{#                ]#}
+{#            });#}
 
 
             var package_table = $('#package_table').DataTable({
@@ -168,7 +171,7 @@
                 "pageLength": 30,
                 {#                "oLanguage": datatables_language,#}
                 ajax: {
-                    url: "/ckan/api/3/action/package_search?q={{ search_term }}&include_private=true&rows=100",
+                    url: "{{ API_URL }}action/package_search?q={{ search_term }}&include_private=true&rows=100",
                     type: 'GET',
                     cache: true,
 {#                    headers: {#}
