@@ -260,11 +260,4 @@ if __name__ == '__main__':
     #         tags['dataset_name'].lower().replace(' ', '-')
     #     )
 
-    filepath = '/home/ianh/PycharmProjects/cache/housing_portal/ckan/metadata.csv'
-    ad.add_resource(
-        "Source - weblink",
-        dataset_name,
-        filepath,
-        tags['source_weblink']
-    )
 
