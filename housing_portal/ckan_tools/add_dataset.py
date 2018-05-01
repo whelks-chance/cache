@@ -196,16 +196,19 @@ class AddDataset:
 if __name__ == '__main__':
 
     ad = AddDataset()
-    for arg in sys.argv:
-        print(arg)
+    # for arg in sys.argv:
+    #     print(arg)
 
-    inputfile = './metadata.csv'
+    inputfile = './metadata_hidden.csv'
     outputfile = ''
     try:
-        opts, args = getopt.getopt(sys.argv, "hi:o:", ["ifile=", "ofile="])
-    except getopt.GetoptError:
+        opts, args = getopt.getopt(sys.argv[1:], "hi:o:", ["ifile=", "ofile="])
+        print('OPTS ARGS', opts, args)
+    except getopt.GetoptError as e1:
+        print(e1)
         print('test.py -i <inputfile> -o <outputfile>')
         sys.exit(2)
+
     for opt, arg in opts:
         if opt == '-h':
             print('test.py -i <inputfile> -o <outputfile>')
@@ -216,10 +219,11 @@ if __name__ == '__main__':
             outputfile = arg
     if os.path.isfile(inputfile):
         print('Input file is ', inputfile)
-    else:
-        print('Input file missing or unavailable')
 
-    ad.add_csv_dataset(inputfile, limit=None)
+        ad.add_csv_dataset(inputfile, limit=None)
+    else:
+        print('\nInput file {} missing or unavailable'.format(inputfile))
+
     exit()
 
     # tags = {
