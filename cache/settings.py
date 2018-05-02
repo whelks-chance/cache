@@ -27,7 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['cache-web-dev.cf.ac.uk', 'cache-web-live.cf.ac.uk']
 API_URL = 'http://localhost:5000/api/3/'
-
+ckan_api_key = ''
+ckan_org_name = ''
+ckan_user_name = ''
+ckan_url = 'http://localhost:5000'
 
 # Application definition
 
@@ -127,11 +130,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "staticfiles"),
     '/var/www/static/',
 ]
-
-ckan_api_key = ''
-ckan_org_name = ''
-ckan_user_name = ''
-ckan_url = 'http://localhost:5000'
 
 try:
     from cache.local_settings import *
