@@ -50,7 +50,7 @@
 </nav>
 
 <!-- Page Content -->
-<div class="container">
+<div class="container home_container">
 
     <!-- Heading Row -->
     <div class="row my-4">
@@ -62,8 +62,12 @@
         <!-- /.col-lg-8 -->
         <div class="col-lg-4">
             <h1>CaCHE Data Navigator</h1>
-            <p>This is demo text to describe the data navigator, why it exists, what it does, who made it and what we hope people will use it for.</p>
-            <a href="{% url 'search' %}" class="btn btn-primary btn-lg" href="#">Search our Data Navigator!</a>
+            <p>The CaCHE Data Navigator is a web application that enhances a researcher’s ability to search, discover and download housing data related to the UK. The aim is to signal key data sources from the public and private sectors in an easy to use single location.
+            </p>
+
+            <div class="search_button">
+                <a href="{% url 'search' %}" class="btn btn-primary btn-lg">Search our Data Navigator!</a>
+            </div>
         </div>
         <!-- /.col-md-4 -->
     </div>
@@ -72,59 +76,88 @@
     <!-- Call to Action Well -->
     <div class="card text-white bg-secondary my-4 text-center">
         <div class="card-body">
-            <p class="text-white m-0">This is the alpha version of the site, please forgive and/or report any bugs you may find!</p>
+            <p class="text-white m-0">This is the alpha version of the site, please forgive and/or <a target="_blank" href="https://forms.office.com/Pages/ResponsePage.aspx?id=MEu3vWiVVki9vwZ1l3j8vC6x3FvG8GhElTMaJJSK3OJUQUJTTFBFQUVRMU81UVIzNTYxOElUMk5WWi4u">report any bugs</a> you may find!</p>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-lg-12" style="padding-bottom: 0.5em">
+            <div class="card">
+                <div class="card-body">
+                    <p>The Data Navigator will eventually include a summary for each data source of what they hold and an audit of their quality, key contacts and links to recent outputs and summaries.  </p>
+                    <p>It has been written using free and open-source software (CKAN) and runs in your web browser.</p>
+                    <p>We recommend Google Chrome for the best experience although it is compatible with all mainstream browsers.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{#    <div class="page-header" id="banner">#}
+{#        <div class="row">#}
+{#            <div class="col-lg-8 col-md-7 col-sm-6">#}
+{#                <h1>CaCHE is the UK’s Collaborative Centre for Housing Evidence</h1>#}
+{#                <p class="lead">A consortium of 12 partners led by the University of Glasgow. It is a five-year programme funded by the Economic and Social Research Council, Joseph Rowntree Foundation and the Arts and Humanities Research Council</p>#}
+{#            </div>#}
+{#            <div class="col-lg-4 col-md-5 col-sm-6">#}
+{#                <div class="sponsor">#}
+{#                    <a href="#">#}
+{#                        <img src="{% static 'img/media_553190_en.png' %}">#}
+{#                    </a>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
 
     <!-- Content Row -->
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h2 class="card-title">Case Study 1</h2>
-                    <p class="card-text">An investigation into data relating to housing held by the ONS.</p>
-                    <p>Property price, private rent and household survey and census statistics, used by government and other organisations for the creation and fulfilment of housing policy in the UK.</p>
-                </div>
-                <div class="card-footer">
-                    <a href="#" class="btn btn-primary">More Info</a>
-                </div>
-            </div>
-        </div>
-        <!-- /.col-md-4 -->
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h2 class="card-title">Case Study 2</h2>
-                    <p class="card-text">A description of the housing data APIs.</p>
-                </div>
-                <div class="card-footer">
-                    <a href="#" class="btn btn-primary">More Info</a>
-                </div>
-            </div>
-        </div>
-        <!-- /.col-md-4 -->
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h2 class="card-title">Case Study 3</h2>
-                    <p class="card-text">How we built the CaCHE DataPortal.</p>
-                    <p>The design and implementation of the database, webserver and website.</p>
-                </div>
-                <div class="card-footer">
-                    <a href="#" class="btn btn-primary">More Info</a>
-                </div>
-            </div>
-        </div>
-        <!-- /.col-md-4 -->
-
-    </div>
+{#    <div class="row">#}
+{#        <div class="col-md-4 mb-4">#}
+{#            <div class="card h-100">#}
+{#                <div class="card-body">#}
+{#                    <h2 class="card-title">Case Study 1</h2>#}
+{#                    <p class="card-text">An investigation into data relating to housing held by the ONS.</p>#}
+{#                    <p>Property price, private rent and household survey and census statistics, used by government and other organisations for the creation and fulfilment of housing policy in the UK.</p>#}
+{#                </div>#}
+{#                <div class="card-footer">#}
+{#                    <a href="#" class="btn btn-primary">More Info</a>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <!-- /.col-md-4 -->#}
+{#        <div class="col-md-4 mb-4">#}
+{#            <div class="card h-100">#}
+{#                <div class="card-body">#}
+{#                    <h2 class="card-title">Case Study 2</h2>#}
+{#                    <p class="card-text">A description of the housing data APIs.</p>#}
+{#                </div>#}
+{#                <div class="card-footer">#}
+{#                    <a href="#" class="btn btn-primary">More Info</a>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <!-- /.col-md-4 -->#}
+{#        <div class="col-md-4 mb-4">#}
+{#            <div class="card h-100">#}
+{#                <div class="card-body">#}
+{#                    <h2 class="card-title">Case Study 3</h2>#}
+{#                    <p class="card-text">How we built the CaCHE DataPortal.</p>#}
+{#                    <p>The design and implementation of the database, webserver and website.</p>#}
+{#                </div>#}
+{#                <div class="card-footer">#}
+{#                    <a href="#" class="btn btn-primary">More Info</a>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <!-- /.col-md-4 -->#}
+{##}
+{#    </div>#}
     <!-- /.row -->
+<div class="home_push"></div>
 
 </div>
 <!-- /.container -->
-
 <!-- Footer -->
-<footer class="py-5 bg-dark">
+<footer class="home_footer py-5 bg-dark">
     <div class="container">
         <p class="m-0 text-center text-white">Copyright &copy; Ian Harvey, Cardiff University, 2018</p>
     </div>
