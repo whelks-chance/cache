@@ -57,8 +57,17 @@ label {
 /*.home_container { min-height: 100%; height: auto !important; height: 100%; margin: 0 auto -3rem; }*/
 /*.home_footer, .home_push {height: 3rem;}*/
 
-.sub_page_container { min-height: 100%; height: auto !important; height: 100%; margin: 0 auto -5rem; }
-.sub_page_footer, .sub_page_push { height:5rem;}
+.sub_page_container { min-height: 100%;
+    /*height: auto !important; */
+    height: 100%;
+    margin: 0 auto -15rem; }
+.sub_page_footer, .sub_page_push { height:15rem;}
+
+html,body{
+    min-height:100%;
+    /*height: auto !important;*/
+    height: 100%;
+}
 
 .search_button {
     /*position: absolute;*/
