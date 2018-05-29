@@ -25,6 +25,9 @@ SECRET_KEY = '9y%8luvs_&4-5)iaeq!udmlr@1+*7*g_v-=npz%33povx59z&2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SITE_ID = 1
+# WIKI_ACCOUNT_HANDLING = False
+
 ALLOWED_HOSTS = ['cache-web-dev.cf.ac.uk', 'cache-web-live.cf.ac.uk']
 API_URL = 'http://localhost:5000/api/3/'
 ckan_api_key = ''
@@ -42,6 +45,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'housing_portal',
+    'django.contrib.sites.apps.SitesConfig',
+    'django.contrib.humanize.apps.HumanizeConfig',
+    'django_nyt.apps.DjangoNytConfig',
+    'mptt',
+    'sekizai',
+    'sorl.thumbnail',
+    'wiki.apps.WikiConfig',
+    'wiki.plugins.attachments.apps.AttachmentsConfig',
+    'wiki.plugins.notifications.apps.NotificationsConfig',
+    'wiki.plugins.images.apps.ImagesConfig',
+    'wiki.plugins.macros.apps.MacrosConfig'
 ]
 
 MIDDLEWARE = [
@@ -68,7 +82,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'housing_portal.context_processors.API_URL'
+                'housing_portal.context_processors.API_URL',
+                "sekizai.context_processors.sekizai",
             ],
         },
     },
