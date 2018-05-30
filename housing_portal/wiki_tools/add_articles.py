@@ -1,9 +1,4 @@
 import os
-
-import requests
-from django.utils.text import slugify
-
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cache.settings")
 
 import django
@@ -12,6 +7,9 @@ django.setup()
 from wiki.models import URLPath
 from wiki.views.accounts import User
 from housing_portal import models
+import requests
+from django.utils.text import slugify
+from cache import settings
 
 
 class WikiPop:
@@ -53,7 +51,7 @@ class WikiPop:
 
     def add_all_datasets(self):
 
-        all_packages = requests.get('http://localhost:5000/api/3/action/package_search?facet.limit=1000&rows=1000')
+        all_packages = requests.get(settings.ckan_url + '/api/3/action/package_search?facet.limit=1000&rows=1000')
         json_blob = all_packages.json()
         cache_surveys = json_blob['result']['results']
 
