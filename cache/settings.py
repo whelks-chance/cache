@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '9y%8luvs_&4-5)iaeq!udmlr@1+*7*g_v-=npz%33povx59z&2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 SITE_ID = 1
 # WIKI_ACCOUNT_HANDLING = False
@@ -140,10 +140,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "staticfiles"),
-    '/var/www/static/',
+    os.path.join(BASE_DIR, "assets"),
+    # '/var/www/static/',
 ]
 
 try:
