@@ -180,6 +180,7 @@
                 "bAutoWidth": false,
                 responsive: true,
                 "pageLength": 30,
+                order: [[ 0, "desc" ]],
                 {#                "oLanguage": datatables_language,#}
                 ajax: {
                     url: "{{ API_URL }}action/package_search?q={{ search_term }}&include_private=true&rows=100",
@@ -190,7 +191,6 @@
 {#                'accept':'application/json'#}
 {#            },#}
                     crossDomain: true,
-
                     data: function (d) {},
                     dataSrc: function ( json ) {
                         if(json['success'] != true) {
@@ -209,7 +209,7 @@
                 },
                 columns: [
                     {
-                        "targets": -1,
+{#                        "targets": -1,#}
                         "data": 'extras',
                         "render": function ( data, type, full, meta ) {
                           var time_period_from = '';
