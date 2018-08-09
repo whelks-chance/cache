@@ -7,13 +7,20 @@
     <title>CaCHE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}" media="screen">
-    <link rel="stylesheet" href="{% static 'bootstrap/css/custom.min.css' %}">
-    <link rel="stylesheet" href="{% static 'cache.css' %}">
 
     <script src="{% static 'jquery/jquery.min.js' %}"></script>
     <script src="{% static 'popper/popper.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>#}
+    <script src="{% static 'js/cache_base.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}" media="screen">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/custom.min.css' %}">
+    <link rel="stylesheet" href="{% static 'cache.css' %}">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120091956-1"></script>
@@ -87,16 +94,18 @@
     </div>
 </div>
 
-<div class="sub_page_container">
+<div class="sub_page_container container">
 
-    <div class="container ">
+{#    <div class="container ">#}
 
         {% block main %}{% endblock %}
 
         <div class="sub_page_push"></div>
 
-    </div>
+{#    </div>#}
 </div>
+
+{% include 'cache_base.html' %}
 
 <footer id="footer" class="sub_page_footer">
 

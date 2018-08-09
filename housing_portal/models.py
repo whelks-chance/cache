@@ -29,7 +29,7 @@ class CacheSurvey(models.Model):
     other_notes = models.TextField()
 
     class Meta:
-        db_table = 'user_language'
+        db_table = 'cache_survey'
 
     def __unicode__(self):
         return '{} : {}'.format(self.id, self.dataset_name)

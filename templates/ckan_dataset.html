@@ -131,6 +131,11 @@
                             <td><a target='_blank' href='{% url 'ckan_resource' %}?uuid={{ r.id }}' class='btn btn-success'>View</a></td>
                         </tr>
                     {% endfor %}
+                        <tr>
+                            <td>Survey</td>
+                            <td>Metadata</td>
+                            <td><a target='_blank' href='{% url 'survey_detail' 'wisid_C01WHF' %}' class='btn btn-success'>View</a></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

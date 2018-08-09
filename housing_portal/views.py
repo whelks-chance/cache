@@ -5,6 +5,8 @@ from django.shortcuts import render
 
 
 # Create your views here.
+from django.template import RequestContext
+
 from housing_portal.ckan_tools.ckan_reader import CKANdata
 
 
@@ -115,3 +117,27 @@ def ckan_dataset(request):
         'ckan_dataset': datahub_service,
         'ckan_dataset_uuid': ckan_resource_uuid,
     })
+
+
+def survey_detail(request, survey_id):
+    return render(request, 'survey_detail.html',
+                  {
+                      # 'preferences': get_user_preferences(request),
+                      # 'searches': get_user_searches(request),
+                      'survey_id': survey_id,
+                      'access_allow': {
+                          'method': 'survey_detail',
+                          'survey_id': survey_id,
+                          'document_type': 'survey',
+                          # 'access_data': access_data
+                      }
+                  })
+
+
+def survey_question(request, question_id):
+    return render(request, 'question_detail.html',
+                  {
+                      # 'preferences': get_user_preferences(request),
+                      # 'searches': get_user_searches(request),
+                      'question_id': question_id
+                  })
