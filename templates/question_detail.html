@@ -72,11 +72,14 @@
             });
 
             $.ajax({
-                url: "{% url 'survey_single_question' question_id %}",
+{#                url: "{% url 'survey_single_question' question_id %}",#}
+                url: "http://localhost:5000/api/3/action/datastore_search?resource_id={{ ckan_resource_uuid }}&q=qid:{{ question_id }}",
 {#            {% url 'api:metadata:DcInfo-detail' pk=survey_id%}#}
 {#                url: "{% url 'api:metadata:Question-detail' pk=question_id%}",#}
                 type: 'GET',
                 success: function(data) {
+                    data = data['result']['records'][0];
+
                     $('#question_number_header').html(data['questionnumber']);
 
                     var dataContent = '';

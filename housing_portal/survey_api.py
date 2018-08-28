@@ -3,70 +3,70 @@ import json
 from django.http import HttpResponse
 
 
+dc_info = {"identifier": "wisid_C01WHF",
+           "subjects": ["Employment", "Skills", "Health", "Social Care", "Wellbeing", "Language", "Training",
+                        "Citizenship", "Identity", "Education", "Young People", "Environment", "Tourism", "Leisure",
+                        "Economic Status", "Accessibility", "Ownership", "Financial Status", "Condition", "Core",
+                        "Housing", "Political"], "creators": ["Office for National Statistics "],
+           "publishers": ["United Kingdom Data Service"], "contributors": [], "coverage_spatial": ["Output Areas"],
+           "relation_same_collection": ["Census 2001 Wales Household Form H2", "Census 2001 Wales Household Form",
+                                        "Census 2001 England and Wales Communal Establishment Form"],
+           "relation_different_collection": ["Census Household Form Wales 1991",
+                                             "Census 2011 Household Questionnaire"], "type": "Dataset",
+           "format": "text", "language": "English & Welsh", "user_id": "Zoe Meredith",
+           "title": "Census 2001 Wales Household Form H2",
+           "description": "The aggregate statistics produced as outputs from UK censuses provide information on a wide range of demographic and socio-economic characteristics of the population of the United Kingdom. They are predominantly a collection of aggregated, or summary counts of the numbers of people, families or households resident in specific geographical areas or 'zones' possessing particular characteristics, or combinations of characteristics drawn from the themes of population, people and places, families, ethnicity and religion, health, work, and housing.",
+           "source_url": "https://discover.ukdataservice.ac.uk/catalogue/?sn=5835&type=Data%20catalogue",
+           "source_doi": "http://dx.doi.org/10.5255/UKDA-SN-7209-1",
+           "coverage_temporal_start": "2001-04-29T01:00:00", "coverage_temporal_end": "2001-04-29T00:00:00",
+           "rights": "Office for National Statistics", "created": "2011-08-23T12:29:56",
+           "updated": "2016-08-01T20:52:25.425600"}
 def survey_dc_info(request, survey_id):
-    dc_info = {"identifier": "wisid_C01WHF",
-               "subjects": ["Employment", "Skills", "Health", "Social Care", "Wellbeing", "Language", "Training",
-                            "Citizenship", "Identity", "Education", "Young People", "Environment", "Tourism", "Leisure",
-                            "Economic Status", "Accessibility", "Ownership", "Financial Status", "Condition", "Core",
-                            "Housing", "Political"], "creators": ["Office for National Statistics "],
-               "publishers": ["United Kingdom Data Service"], "contributors": [], "coverage_spatial": ["Output Areas"],
-               "relation_same_collection": ["Census 2001 Wales Household Form H2", "Census 2001 Wales Household Form",
-                                            "Census 2001 England and Wales Communal Establishment Form"],
-               "relation_different_collection": ["Census Household Form Wales 1991",
-                                                 "Census 2011 Household Questionnaire"], "type": "Dataset",
-               "format": "text", "language": "English & Welsh", "user_id": "Zoe Meredith",
-               "title": "Census 2001 Wales Household Form H2",
-               "description": "The aggregate statistics produced as outputs from UK censuses provide information on a wide range of demographic and socio-economic characteristics of the population of the United Kingdom. They are predominantly a collection of aggregated, or summary counts of the numbers of people, families or households resident in specific geographical areas or 'zones' possessing particular characteristics, or combinations of characteristics drawn from the themes of population, people and places, families, ethnicity and religion, health, work, and housing.",
-               "source_url": "https://discover.ukdataservice.ac.uk/catalogue/?sn=5835&type=Data%20catalogue",
-               "source_doi": "http://dx.doi.org/10.5255/UKDA-SN-7209-1",
-               "coverage_temporal_start": "2001-04-29T01:00:00", "coverage_temporal_end": "2001-04-29T00:00:00",
-               "rights": "Office for National Statistics", "created": "2011-08-23T12:29:56",
-               "updated": "2016-08-01T20:52:25.425600"}
     return HttpResponse(json.dumps(dc_info, indent=4), content_type="application/json")
 
 
-def survey_metadata(request, survey_id):
-    metadata = {
-        "url": "/metadata/survey/wisid_C01WHF",
-        "results_count": 1,
-        "read_access": True,
-        "search_result_data": [
-            {
-                "wiserd_id": "wisid_C01WHF",
-                "data": {
-                    "survey_title": "Census 2001 Wales Household Form H2",
-                    "datacollector": "Office for National Statistics",
-                    "surveyid": "sid_c01whf",
-                    "samplesize": "16,000",
-                    "responserate": "91",
-                    "collectionenddate": "2001-05-30",
-                    "des_weighting": "",
-                    "spatialdata": False,
-                    "user_id": "zmeredith",
-                    "long": "No",
-                    "collectionstartdate": "2001-04-19",
-                    "samp_procedure": "The Census is distributed and the Census Act 1920 requires individuals to complete the form and to distribute and collect forms from all usual residents in their establishment. The postcode based selection with full enumeration of these made workload planning and monitoring relatively straightforward. The overall multi-stage design kept the sample size manageable (and affordable) while still allowing the estimation of under enumeration to small areas with full geographical coverage.",
-                    "location": "N/A",
-                    "surveystartdate": "1999-03-01",
-                    "updated": "2011-08-23 T 12:34:14 ",
-                    "descriptionofsamplingerror": "N/A",
-                    "moc_description": "Self- Completion",
-                    "link": "N/A",
-                    "surveyfrequency": "N/A",
-                    "collectionsituation": "Self- Completion",
-                    "notes": "N/A",
-                    "created": "2011-08-23 T 12:34:14 ",
-                    "short_title": "Survey",
-                    "surveyenddate": "2001-05-30",
-                    "dataproductid": "N/A",
-                    "dataproduct": "N/A",
-                    "identifier": "wisid_C01WHF"
-                }
+metadata = {
+    "url": "/metadata/survey/wisid_C01WHF",
+    "results_count": 1,
+    "read_access": True,
+    "search_result_data": [
+        {
+            "wiserd_id": "wisid_C01WHF",
+            "data": {
+                "survey_title": "Census 2001 Wales Household Form H2",
+                "datacollector": "Office for National Statistics",
+                "surveyid": "sid_c01whf",
+                "samplesize": "16,000",
+                "responserate": "91",
+                "collectionenddate": "2001-05-30",
+                "des_weighting": "",
+                "spatialdata": False,
+                "user_id": "zmeredith",
+                "long": "No",
+                "collectionstartdate": "2001-04-19",
+                "samp_procedure": "The Census is distributed and the Census Act 1920 requires individuals to complete the form and to distribute and collect forms from all usual residents in their establishment. The postcode based selection with full enumeration of these made workload planning and monitoring relatively straightforward. The overall multi-stage design kept the sample size manageable (and affordable) while still allowing the estimation of under enumeration to small areas with full geographical coverage.",
+                "location": "N/A",
+                "surveystartdate": "1999-03-01",
+                "updated": "2011-08-23 T 12:34:14 ",
+                "descriptionofsamplingerror": "N/A",
+                "moc_description": "Self- Completion",
+                "link": "N/A",
+                "surveyfrequency": "N/A",
+                "collectionsituation": "Self- Completion",
+                "notes": "N/A",
+                "created": "2011-08-23 T 12:34:14 ",
+                "short_title": "Survey",
+                "surveyenddate": "2001-05-30",
+                "dataproductid": "N/A",
+                "dataproduct": "N/A",
+                "identifier": "wisid_C01WHF"
             }
-        ],
-        "method": "survey_metadata",
-        "access_data": []
-    }
+        }
+    ],
+    "method": "survey_metadata",
+    "access_data": []
+}
+def survey_metadata(request, survey_id):
     return HttpResponse(json.dumps(metadata, indent=4), content_type="application/json")
 
 
@@ -2084,8 +2084,7 @@ def survey_questions(request, survey_id):
     return HttpResponse(json.dumps(questions, indent=4), content_type="application/json")
 
 
-def survey_single_question(request, question_id):
-    question_detail = {"qid": "qid_liwhh04wsesq148-c", "thematic_tags_set": ["Employment"],
+question_detail = {"qid": "qid_liwhh04wsesq148-c", "thematic_tags_set": ["Employment"],
                        "thematic_groups_set": ["Employment Skills Training"],
                        "link_from_name": "Section: Tenure and housing costs Q147", "sub_of_name": None,
                        "type": "COMPOUND Question",
@@ -2143,11 +2142,11 @@ def survey_single_question(request, question_id):
                                     "created": "2010-11-16T15:07:11", "updated": "2010-11-16T15:07:11",
                                     "response_type": 8},
                        "user_id": {"id": 6, "user_id": "nkopelman", "user_name": "Nikki Kopelman", "user_email": None}}
+def survey_single_question(request, question_id):
     return HttpResponse(json.dumps(question_detail, indent=4), content_type="application/json")
 
 
-def survey_question_results(request, question_id):
-    question_results = {
+question_results = {
         "url": "/metadata/survey/question/qid_liwhh04wsesq148-c/results",
         "results_count": 1,
         "method": "survey_questions_results",
@@ -2171,6 +2170,7 @@ def survey_question_results(request, question_id):
             }
         ]
     }
+def survey_question_results(request, question_id):
     return HttpResponse(json.dumps(question_results, indent=4), content_type="application/json")
 
 

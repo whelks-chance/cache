@@ -1,5 +1,6 @@
 import json
 
+from ckanapi import NotFound
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 
@@ -100,6 +101,7 @@ def cleanup(ckan_datasets):
         ckan_datasets[idx]['extras_cleaned'] = cleaned
     return ckan_datasets
 
+
 def ckan_dataset(request):
     ckan_resource_uuid = request.GET.get('uuid', 'MISSING CKAN RESOURCE UUID')
     datahub_service = {}
@@ -120,24 +122,40 @@ def ckan_dataset(request):
 
 
 def survey_detail(request, survey_id):
+    ckan_resource_uuid = request.GET.get('uuid', 'MISSING CKAN RESOURCE UUID')
+    datahub_service = {}
+    if ckan_resource_uuid:
+        ckan_data = CKANdata()
+        try:
+            ckan_datasets = ckan_data.get_dataset_by_uuid(ckan_resource_uuid)
+            datahub_service['data'] = cleanup(ckan_datasets)
+            datahub_service['message'] = 'Success'
+            datahub_service['success'] = True
+        except NotFound as nfe1:
+            datahub_service['data'] = None
+            datahub_service['message'] = 'Failure - ckan resource not found'
+            datahub_service['success'] = False
+    else:
+        datahub_service['message'] = 'Failure - requires a search term'
+        datahub_service['success'] = False
     return render(request, 'survey_detail.html',
                   {
-                      # 'preferences': get_user_preferences(request),
-                      # 'searches': get_user_searches(request),
+                      'ckan_dataset': datahub_service,
+                      'ckan_dataset_uuid': ckan_resource_uuid,
                       'survey_id': survey_id,
                       'access_allow': {
                           'method': 'survey_detail',
                           'survey_id': survey_id,
                           'document_type': 'survey',
-                          # 'access_data': access_data
                       }
                   })
 
 
 def survey_question(request, question_id):
+    ckan_resource_uuid = request.GET.get('uuid', 'MISSING CKAN RESOURCE UUID')
+
     return render(request, 'question_detail.html',
                   {
-                      # 'preferences': get_user_preferences(request),
-                      # 'searches': get_user_searches(request),
+                      'ckan_resource_uuid': ckan_resource_uuid,
                       'question_id': question_id
                   })
