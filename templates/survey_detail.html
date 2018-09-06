@@ -26,7 +26,12 @@
     <script>
 
         function replaceAll(str, find, replace) {
-            return str.replace(new RegExp(find, 'g'), replace);
+            if (typeof str === 'string' ) {
+                return str.replace(new RegExp(find, 'g'), replace);
+            } else {
+                // Not a string but ok.
+                return str;
+            }
         }
 
         var survey_description = {
@@ -285,7 +290,8 @@
         }
 
         function get_data_row_html(field, display_name, value, type) {
-            if (type == undefined) {
+            value = replaceAll(value, '::', '\n');
+            if (type === undefined) {
 
                 if (value != null && value.constructor === Array) {
                     var break_value = '';
@@ -293,7 +299,6 @@
                         break_value += '\n' + value[val];
                     }
                     value = break_value;
-                    value = replaceAll(value, '::', '\n');
                 }
 
                 return ('<div class="control-group form-group row">' +

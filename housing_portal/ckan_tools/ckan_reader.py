@@ -7,6 +7,7 @@ from cache.settings import ckan_api_key, ckan_org_name, ckan_user_name, ckan_url
 from housing_portal.datasources.generic_source import RemoteDataDefault
 from PIL import Image
 
+
 class CKANdata(RemoteDataDefault):
     def __init__(self):
         RemoteDataDefault.__init__(self)
@@ -204,7 +205,7 @@ class CKANdata(RemoteDataDefault):
 
         uuid = ckan_api.action.package_search(q=search_term)
 
-        print(uuid)
+        # print(uuid)
         return [uuid]
 
 

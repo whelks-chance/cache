@@ -26,13 +26,20 @@
 
                 <div class="bs-component">
                     <form action="{% url 'search_results' %}" method="get" role="search">
-                        <div class="form-group">
-                            <label class="col-form-label col-form-label-lg" for="inputLarge">Search here</label>
-                            <input class="form-control form-control-lg" type="text" id="inputLarge" placeholder="Type some keywords to search for here..."  name="search_term" style="margin-top: 0.2em">
+                        <label class="col-form-label col-form-label-lg" for="inputLarge">Search here</label>
+
+                        <div class="input-group">
+                            <input class="form-control form-control-lg" type="text" id="inputLarge" placeholder="Type some keywords to search for here..."  name="search_term" style="margin-top: 0.2em; margin-bottom: 1em">
+                            <span class="input-group-btn" style="margin-top: 4px">
+                                <button class="btn btn-default btn-lg"
+                                        style="border-top-left-radius: 0px;border-bottom-left-radius: 0px;border-color: lightgray !important;border-style: solid !important;border: 1px;border-left: 0;"
+                                        type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
                         </div>
                     </form>
                 </div>
-
             </div>
             <div class="col-lg-4 col-md-5 col-sm-6">
                 <div class="sponsor">

@@ -122,12 +122,12 @@ def ckan_dataset(request):
 
 
 def survey_detail(request, survey_id):
-    ckan_resource_uuid = request.GET.get('uuid', 'MISSING CKAN RESOURCE UUID')
+    ckan_dataset_uuid = request.GET.get('uuid', 'MISSING CKAN DATASET UUID')
     datahub_service = {}
-    if ckan_resource_uuid:
+    if ckan_dataset_uuid:
         ckan_data = CKANdata()
         try:
-            ckan_datasets = ckan_data.get_dataset_by_uuid(ckan_resource_uuid)
+            ckan_datasets = ckan_data.get_dataset_by_uuid(ckan_dataset_uuid)
             datahub_service['data'] = cleanup(ckan_datasets)
             datahub_service['message'] = 'Success'
             datahub_service['success'] = True
@@ -141,7 +141,7 @@ def survey_detail(request, survey_id):
     return render(request, 'survey_detail.html',
                   {
                       'ckan_dataset': datahub_service,
-                      'ckan_dataset_uuid': ckan_resource_uuid,
+                      'ckan_dataset_uuid': ckan_dataset_uuid,
                       'survey_id': survey_id,
                       'access_allow': {
                           'method': 'survey_detail',

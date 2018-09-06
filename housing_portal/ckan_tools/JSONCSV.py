@@ -1,9 +1,18 @@
 import csv
+import json
 
 import dpath as dpath
 import requests
 
+from housing_portal.ckan_tools.ckan_reader import CKANdata
 from housing_portal.survey_api import metadata, dc_info, question_detail, question_results
+
+
+class settings:
+    ckan_api_key = 'd3e891ae-3afa-49a1-94c0-91a54ff551b2'
+    ckan_org_name = 'testorg'
+    ckan_user_name = 'testadmin'
+    ckan_url = 'http://localhost:5000'
 
 
 class JSONCSV:
@@ -119,6 +128,39 @@ class JSONCSV:
             # Overwrite old file with single item
             self.run2(json_blob, output_filename)
 
+    def add_file_resource_to_dataset(self, ckan_dataset_uuid, filename):
+        ckan_data = CKANdata()
+        # ckan_datasets = ckan_data.get_dataset_by_uuid(ckan_dataset_uuid)
+        ckan_datasets = ckan_data.get_resource_by_search_term('livinginwalesformerlywelshhouseconditionssurvey')
+
+        # print(ckan_datasets)
+
+        data_dict = {
+                "package_id": ckan_datasets[0]['results'][0]['id'],
+                "name": filename,
+                # "url": url,
+                "format": "text/csv"
+            }
+        # data = json.dumps(data_dict)
+
+        # print('\n\n', data, '\n\n')
+
+        response = requests.post(
+            url=settings.ckan_url + '/api/action/resource_create',
+            data=data_dict,
+            headers={
+                "X-CKAN-API-Key": settings.ckan_api_key,
+                # 'content-type': 'application/csv'
+                # 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+
+            },
+            # files=[('upload', open(filename, 'rb')),]
+            files=[('upload', open(filename, 'rb'))]
+        )
+
+        print()
+        print(response.__dict__)
+
 
 if __name__ == '__main__':
     jsoncsv = JSONCSV(username='ubuntu', password='a')
@@ -130,18 +172,42 @@ if __name__ == '__main__':
 
     jsoncsv.run2(question_results['search_result_data'][0]['data'], 'question_results_metadata.csv')
 
-    jsoncsv.from_url(
-        'https://data.wiserd.ac.uk/metadata/survey/wisid_C01WHF',
-        'wisid_C01WHF_survey.csv',
-        'search_result_data/0/data')
+    # jsoncsv.from_url(
+    #     'https://data.wiserd.ac.uk/metadata/survey/wisid_C01WHF',
+    #     'wisid_C01WHF_survey.csv',
+    #     'search_result_data/0/data')
+    #
+    # jsoncsv.from_url(
+    #     'https://data.wiserd.ac.uk/api/metadata/DcInfo/wisid_C01WHF/',
+    #     'wisid_C01WHF_DcInfo.csv'
+    #     )
+    #
+    # jsoncsv.from_url(
+    #     'https://data.wiserd.ac.uk/api/metadata/Question/?survey__identifier=wisid_C01WHF',
+    #     'questions_wisid_C01WHF.csv',
+    #     'results'
+    # )
+
+    # jsoncsv.from_url(
+    #     'https://data.wiserd.ac.uk/metadata/survey/wisid_census2011hqeng',
+    #     'wisid_census2011hqeng_survey.csv',
+    #     'search_result_data/0/data')
+    #
+    # jsoncsv.from_url(
+    #     'https://data.wiserd.ac.uk/api/metadata/DcInfo/wisid_census2011hqeng/',
+    #     'wisid_census2011hqeng_DcInfo.csv'
+    # )
+    #
+    # jsoncsv.from_url(
+    #     'https://data.wiserd.ac.uk/api/metadata/Question/?survey__identifier=wisid_census2011hqeng',
+    #     'wisid_census2011hqeng_questions.csv',
+    #     'results'
+    # )
 
     jsoncsv.from_url(
-        'https://data.wiserd.ac.uk/api/metadata/DcInfo/wisid_C01WHF/',
-        'wisid_C01WHF_DcInfo.csv'
-        )
-
-    jsoncsv.from_url(
-        'https://data.wiserd.ac.uk/api/metadata/Question/?survey__identifier=wisid_C01WHF&_=1535373714885',
-        'questions_wisid_C01WHF.csv',
+        'https://data.wiserd.ac.uk/api/metadata/Response/?survey__identifier=wisid_census2011hqeng',
+        'wisid_census2011hqeng_responses.csv',
         'results'
     )
+
+    jsoncsv.add_file_resource_to_dataset('', 'wisid_census2011hqeng_responses.csv')

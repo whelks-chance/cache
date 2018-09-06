@@ -109,7 +109,8 @@
             });
 
             $.ajax({
-                url: "{% url 'survey_question_results' question_id %}",
+{#                url: "{% url 'survey_question_results' question_id %}",#}
+                url: "http://localhost:5000/api/3/action/datastore_search?resource_id={{ ckan_resource_uuid }}&q=qid:{{ question_id }}",
                 type: 'GET',
                 success: function(data) {
                     var dataContent = '';

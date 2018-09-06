@@ -171,7 +171,6 @@ class AddDataset:
                 "X-CKAN-API-Key": settings.ckan_api_key,
                 'content-type': 'application/json'
             }
-            # files=[('upload', open(filepath, 'rb'))]
         )
         print(response.text)
 
