@@ -19,7 +19,7 @@ from django.contrib import admin
 
 from django.conf import settings
 # from django.conf.urls.static import static
-
+from cachevis import views as cachevis_views
 from housing_portal import views, survey_api
 
 urlpatterns = [
@@ -51,6 +51,9 @@ urlpatterns = [
     url(r'^map_test/', views.map_test, name='map_test'),
 
     url(r'^eg1/', views.eg1, name='eg1'),
+
+    url(r'cachevis/test', cachevis_views.test, name='cachevis_test'),
+    url(r'cachevis/bank_share', cachevis_views.bank_share, name='bank_share'),
 
     #   Be careful not to let nginx forward this to the actual ckan server
     url(r'^local_ckan/search', views.ckan_search, name='ckan_search'),

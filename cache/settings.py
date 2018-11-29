@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'wiki.plugins.attachments.apps.AttachmentsConfig',
     'wiki.plugins.notifications.apps.NotificationsConfig',
     'wiki.plugins.images.apps.ImagesConfig',
-    'wiki.plugins.macros.apps.MacrosConfig'
+    'wiki.plugins.macros.apps.MacrosConfig',
+    'cachevis'
 ]
 
 MIDDLEWARE = [
@@ -73,8 +74,10 @@ ROOT_URLCONF = 'cache.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(os.path.join(BASE_DIR, 'cachevis'), 'templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,6 +147,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "assets")
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "staticfiles"),
+    os.path.join(os.path.join(BASE_DIR, 'cachevis'), 'staticfiles')
     # '/var/www/static/',
 ]
 

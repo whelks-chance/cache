@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block page_name %}{% trans 'Visualisations' %}{% endblock %}
+
+{% block main %}
+
+    <script src="{% static 'jquery/jquery.min.js' %}"></script>
+    {#<script type="text/javascript" src="{% static "d3/d3.js" %}"></script>#}
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        th {
+            border-bottom: 2px solid #ddd;
+            padding: 8px;
+            font-weight: bold;
+        }
+        td {
+            padding: 8px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+        }
+        #chart {
+            padding: 0px;
+        }
+        .xaxislabel {
+            font-size: 9px;
+        }
+
+        .main {
+
+        }
+
+        .floating_block {
+            display: block;
+        {#            position: fixed;#}
+            position: absolute;
+            top: 12em;
+            background-color: whitesmoke;
+            right: 2em;
+            max-width: 40%;
+            padding: 1em;
+            border-radius: 1em;
+
+        }
+
+        .tooltip {
+            position: absolute;
+    text-align: center;
+{#    width: 60px;#}
+{#    height: 28px;#}
+    padding: 0.5em;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+        }
+    </style>
+
+    <body>
+
+    <div class="main">
+        <div class="floating_block">
+            <p class="header_text" id="header_text" hidden></p>
+            <p>Data are for the whole mortgage market with the latest month's data estimated based on the lending figures provided by a sample of lenders that represent around 80% of the mortgage market. The aggregate of these figures were scaled up to represent the whole market</p>
+
+            <p>
+                <a target="_blank" href="https://www.ukfinance.org.uk/wp-content/uploads/2017/11/Gross-Mortgage-Lending-Statistics-August-2017.xls">Data .xlsx</a>
+            </p>
+
+            <p>
+                <a target="_blank" href="https://www.ukfinance.org.uk/statistics/mortgages/">UK Finance Mortgage Statistics</a>
+            </p>
+
+            <ol>
+                <li>Total gross lending gives the total value of loans secured on dwellings that are newly advanced by institutions in the period. All the figures were sourced from the Bank of England except the estimate for the most current month</li>
+                <li>The UK Finance estimates of gross lending for the latest month were based on the lending figures provided by a sample of lenders that represent around 80% of the mortgage market. The aggregate of these figures were scaled up to represent the whole market</li>
+                <li>UK Finance represents nearly 300 of the leading firms providing finance, banking, markets and payments-related services in or from the UK. UK Finance has been created by combining most of the activities of the Asset Based Finance Association, the British Bankers’ Association, the Council of Mortgage Lenders, Financial Fraud Action UK, Payments UK and the UK Cards Association</li>
+            </ol>
+        </div>
+        <div id="datatable"></div>
+    </div>
+
+    <script>
+        // Define the div for the tooltip
+        var tooltip_div = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+        var rows = [];
+        var formatdate = d3.time.format("%b %d %Y");
+
+        d3.csv("{% static 'data/Total_Market_Gross_Mortgage_Lending_Statistics.csv' %}", function(error, csv) {
+
+            var headerNames = d3.keys(csv[0]);
+            d3.select("#header_text").text(headerNames);
+
+            csv.forEach(function (row) {
+                row.lend = parseFloat(
+                    row['gross mortgage lending during period £m']
+                ).toFixed(0);
+
+                row.dt = row.Date;
+                row.notes_eng = row.notes;
+                rows.push(row);
+            });
+
+            var table = d3.select("#datatable").append("table");
+            thead = table.append("thead");
+            tbody = table.append("tbody");
+
+            thead.append("th").text("Date");
+            thead.append("th").text("Gross mortgage lending during period £m");
+            thead.append("th").text("");
+
+            var tr = tbody.selectAll("tr")
+                .data(rows)
+                .enter().append("tr");
+
+            var td = tr.selectAll("td")
+                .data(function (d) {
+                    return [d.dt, d.lend]
+                })
+                .enter().append("td")
+                .text(function (d) {
+                    return d;
+                });
+
+            var width = 280,
+                height = d3.select("table")[0][0].clientHeight,
+                mx = 10,
+                radius = 4;
+
+            // Now add the chart column
+            d3.select("#datatable tbody tr").append("td")
+                .attr("id", "chart")
+                .attr("width", width + "px")
+                .attr("rowspan", rows.length);
+
+            var chart = d3.select("#chart").append("svg")
+                .attr("class", "chart")
+                .attr("width", width)
+                .attr("height", height);
+
+            var maxLend = 0;
+            var minLend = Number.MAX_VALUE;
+            for (var i = 0; i < rows.length; i++) {
+                var this_value = parseFloat(rows[i].lend);
+                {#                console.log(this_value);#}
+
+                if (this_value > maxLend) {
+                    {#                    console.log('bigger than maxlend, extending x to y:' + maxLend  + ' ' + this_value);#}
+                    maxLend = parseFloat(this_value);
+                }
+                if (this_value < minLend) {
+                    {#                    console.log('smaller than minlend, contracting x to y:' + minLend + ' ' + this_value);#}
+                    minLend = this_value;
+                }
+
+                {#                console.log('Current min - max ' + minLend + ' ' + maxLend);#}
+                {#                console.log(minLend < maxLend + '\n')#}
+            }
+
+            var header_text = d3.select("#header_text");
+            header_text.text(header_text.text() + ' maxLend: ' + maxLend + ' minLend: ' + minLend);
+
+
+            var dates = rows.map(function (t) {
+                return t.dt;
+            });
+
+            var xscale = d3.scale.linear()
+                .domain([minLend, maxLend])
+                .range([mx, width - mx])
+                .nice();
+
+            var yscale = d3.scale.ordinal()
+                .domain(dates)
+                .rangeBands([0, height]);
+
+            chart.selectAll(".xaxislabel")
+                .data(xscale.ticks(4))
+                .enter().append("text")
+                .attr("class", "xaxislabel")
+                .attr("x", function (d) {
+                    return xscale(d);
+                })
+                .attr("y", 10)
+                .attr("text-anchor", "middle")
+                .text(String);
+
+            chart.selectAll(".xaxistick")
+                .data(xscale.ticks(2))
+                .enter().append("line")
+                .attr("x1", function (d) {
+                    return xscale(d);
+                })
+                .attr("x2", function (d) {
+                    return xscale(d);
+                })
+                .attr("y1", 10)
+                .attr("y2", height)
+                .attr("stroke", "#eee")
+                .attr("stroke-width", 1);
+
+            chart.selectAll(".line")
+                .data(rows)
+                .enter().append("line")
+                .attr("x1", function (d) {
+                    return xscale(d.lend);
+                })
+                .attr("y1", function (d) {
+                    return yscale(d.dt) + yscale.rangeBand() / 2;
+                })
+                .attr("x2", function (d, i) {
+                    return rows[i + 1] ? xscale(rows[i + 1].lend) : xscale(d.lend);
+                })
+                .attr("y2", function (d, i) {
+                    return rows[i + 1] ? yscale(rows[i + 1].dt) + yscale.rangeBand() / 2 : yscale(d.dt) + yscale.rangeBand() / 2;
+                })
+                .attr("stroke", "#777")
+                .attr("stroke-width", 2);
+
+            var pt = chart.selectAll(".pt")
+                .data(rows)
+                .enter().append("g")
+                .attr("class", "pt")
+                .attr("transform", function (d) {
+                    return "translate(" + xscale(d.lend) + "," + (yscale(d.dt) + yscale.rangeBand() / 2) + ")";
+                });
+
+            pt.append("circle")
+                .attr("cx", 0)
+                .attr("cy", 0)
+                .attr("r", function (d) {
+                    if (d.notes_eng != "") {
+                        return radius * 2;
+                    } else {
+                        return radius
+                    }
+                })
+                .attr("opacity", 0.5)
+                .attr("fill", function (d) {
+                    return d.notes_eng != "" ? "#0000ff" : "#ff0000"
+                })
+                .on("mouseover", function (d) {
+                    tooltip_div.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip_div.html(d.lend + "<br/>" + d.notes_eng)
+                        .style("left", (d3.event.pageX) + "px")
+                        .style("top", (d3.event.pageY - 40) + "px");
+                })
+                .on("mouseout", function (d) {
+                    tooltip_div.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+
+
+                });
+        })
+    </script>
+
+    <script>
+        $(document).ready(function(){
+        });
+    </script>
+
+{% endblock %}
