@@ -1,8 +1,12 @@
-WIDTH = 500;
-HEIGHT = 850;
+// Originally from http://skedasis.com/d3/slopegraph/
+// Mucked about with by Ian Harvey
 
-LEFT_MARGIN = 150;
-RIGHT_MARGIN = 150;
+
+WIDTH = window.screen.width * 0.8;
+HEIGHT = 1850;
+
+LEFT_MARGIN = window.screen.width / 4;
+RIGHT_MARGIN = window.screen.width / 4;
 TOP_MARGIN = 100;
 BOTTOM_MARGIN = 50;
 
@@ -20,7 +24,10 @@ function _to_data(y1,y2,d){
     var _d = {};
     for (var k1 in y1d) {
         _d[k1] = {};
-        _d[k1]['left'] = y1d[k1];
+        _d[k1]['left'] = parseFloat(y1d[k1]);
+        if (isNaN(_d[k1].left)) {
+            _d[k1].left = 0;
+        }
         _d[k1]['right'] = 0;
         _d[k1]['label'] = k1;
     }
@@ -29,14 +36,10 @@ function _to_data(y1,y2,d){
             _d[k2] = {};
             _d[k2].left = 0;
             _d[k2]['label'] = k2;
-
-            console.log(k2 + ' not in y2d')
         }
-        _d[k2].right = y2d[k2];
-        if (_d[k2].right === NaN) {
+        _d[k2].right = parseFloat(y2d[k2]);
+        if (isNaN(_d[k2].right)) {
             _d[k2].right = 0;
-
-            console.log(k2 + ' not in _d')
         }
     }
     Y1 = y1;
@@ -106,7 +109,7 @@ function _min_max(v){
 
 var _y = d3.scale.linear()
     .domain([_min_key(data), _max_key(data)])
-    .range([TOP_MARGIN, HEIGHT-BOTTOM_MARGIN])
+    .range([TOP_MARGIN, HEIGHT-BOTTOM_MARGIN]);
 
 function y(d,i){
     return HEIGHT - _y(d)
@@ -222,7 +225,7 @@ _y = d3.scale.linear()
     .range([TOP_MARGIN, HEIGHT-BOTTOM_MARGIN])
 
 function y(d,i){
-    return HEIGHT - _y(d)
+    return (HEIGHT - _y(d)) + 40
 }
 
 
@@ -233,11 +236,11 @@ sg.selectAll('.left_labels')
         return y(d.left_coord)
     })
     .attr('dy', '.35em')
-    .attr('font-size', 10)
+    .attr('font-size', 12)
     .attr('font-weight', 'bold')
     .attr('text-anchor', 'end')
     .text(function(d,i){ return d.label})
-    .attr('fill', 'black')
+    .attr('fill', 'black');
 
 sg.selectAll('.left_values')
     .data(data).enter().append('svg:text')
@@ -249,7 +252,7 @@ sg.selectAll('.left_values')
     .attr('font-size', 10)
     .attr('text-anchor', 'end')
     .text(function(d,i){ return d.left})
-    .attr('fill', 'black')
+    .attr('fill', 'black');
 
 sg.selectAll('.right_labels')
     .data(data).enter().append('svg:text')
@@ -260,9 +263,9 @@ sg.selectAll('.right_labels')
     .attr('dy', '.35em')
     .attr('dx', 35)
     .attr('font-weight', 'bold')
-    .attr('font-size', 10)
+    .attr('font-size', 12)
     .text(function(d,i){ return d.label})
-    .attr('fill', 'black')
+    .attr('fill', 'black');
 
 //
 sg.selectAll('.right_values')
@@ -275,36 +278,36 @@ sg.selectAll('.right_values')
     .attr('dx', 10)
     .attr('font-size', 10)
     .text(function(d,i){ return d.right})
-    .attr('fill', 'black')
+    .attr('fill', 'black');
 
 sg.append('svg:text')
     .attr('x', LEFT_MARGIN)
     .attr('y', TOP_MARGIN/2)
     .attr('text-anchor', 'end')
     .attr('opacity', .5)
-    .text(Y1)
+    .text(Y1);
 
 //
 sg.append('svg:text')
     .attr('x', WIDTH-RIGHT_MARGIN)
     .attr('y', TOP_MARGIN/2)
     .attr('opacity', .5)
-    .text(Y2)
+    .text(Y2);
 
 sg.append('svg:line')
     .attr('x1', LEFT_MARGIN/2)
     .attr('x2', WIDTH-RIGHT_MARGIN/2)
     .attr('y1', TOP_MARGIN*2/3)
     .attr('y2', TOP_MARGIN*2/3)
-    .attr('stroke', 'black')
-    .attr('opacity', .5)
+    .attr('stroke', 'green')
+    .attr('opacity', .5);
 
 sg.append('svg:text')
     .attr('x', WIDTH/2)
     .attr('y', TOP_MARGIN/2 - 25)
     .attr('text-anchor', 'middle')
     .text('UK Finance members\n value of mortgages outstanding, UK')
-    .attr('font-variant', 'small-caps')
+    .attr('font-variant', 'small-caps');
 
 sg.selectAll('.slopes')
     .data(data).enter().append('svg:line')
@@ -317,15 +320,27 @@ sg.selectAll('.slopes')
         return y(d.right_coord)
     })
     .attr('opacity', .6)
-    .attr('stroke', 'black');
+    .attr('stroke', 'black')
+    .attr("stroke-width", 2)
 
-    // .on("mouseover", function (d) {
-    //     console.log(d);
-    //     sg.attr("stroke-width", 5).attr('stroke', 'red')
-    //
-    // })
-    // .on("mouseout", function (d) {
-    //     console.log(d);
-    //     sg.attr("stroke-width", 1).attr('stroke', 'black')
-    //
-    // });
+    .on("mouseover", function (d) {
+        console.log(d);
+        console.log(this);
+        d3.select(this).attr("stroke-width", 6).attr('stroke', 'red');
+        d3.selectAll("text").filter(function(){
+            return d3.select(this).text() == d['label']
+        })
+            .attr("fill", "red")
+            .attr('font-size', 20)
+        ;
+    })
+    .on("mouseout", function (d) {
+        console.log(d);
+        d3.select(this).attr("stroke-width", 2).attr('stroke', 'black');
+        d3.selectAll("text").filter(function(){
+            return d3.select(this).text() == d['label']
+        })
+            .attr("fill", "black")
+            .attr('font-size', 10)
+        ;
+    });
