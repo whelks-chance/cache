@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block page_name %}{% trans 'Visualisations2' %}{% endblock %}
+
+{% block main %}
+
+    <style>
+    .infographic_main {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: stretch;
+    }
+
+    .infographic_single {
+        border: 1px solid;
+        border-radius: 2em;
+        padding: 1em;
+        margin: 1em;
+        background-color: lightgoldenrodyellow;
+        width: 20vw;
+    }
+
+    .infographic_text {
+
+    }
+    </style>
+
+
+    <script src="{% static 'jquery/jquery.min.js' %}"></script>
+    {#<script type="text/javascript" src="{% static "d3/d3.js" %}"></script>#}
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="{% static 'infographic.js' %}"></script>
+
+    <script>
+        $(document).ready(function(){
+            getFile("{% static 'data/101_cat_facts_care_com.txt' %}")
+        });
+    </script>
+
+    <div class="raw_data" id="raw_data"></div>
+
+    <div id="infographic_main" class="infographic_main"></div>
+
+{% endblock %}

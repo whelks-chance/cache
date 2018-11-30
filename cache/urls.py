@@ -54,6 +54,7 @@ urlpatterns = [
 
     url(r'cachevis/test', cachevis_views.test, name='cachevis_test'),
     url(r'cachevis/bank_share', cachevis_views.bank_share, name='bank_share'),
+    url(r'cachevis/infographic', cachevis_views.infographic, name='infographic'),
 
     #   Be careful not to let nginx forward this to the actual ckan server
     url(r'^local_ckan/search', views.ckan_search, name='ckan_search'),
