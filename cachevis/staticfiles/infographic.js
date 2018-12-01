@@ -13,6 +13,11 @@ function record_line(line) {
     // }
     // .replace(",$", "").trim()
 
+    // REGEX is hard - the below is a smashing together of the following plus trial and error
+    // http://www.jquerybyexample.net/2012/02/extract-numbers-from-string-using.html
+    // https://codereview.stackexchange.com/questions/115885/extract-numbers-from-a-string-javascript
+    // https://stackoverflow.com/questions/5917082/regular-expression-to-match-numbers-with-or-without-commas-and-decimals-in-text
+
     var regex = /(:?^|\s)(?=.)((?:0|(?:[1-9](?:\d*|\d{0,2}(?:,\d{3})*)))?(?:\.\d*[1-9])?)(?!\S)/g;
     var match;
     while (match = regex.exec(line)) {
