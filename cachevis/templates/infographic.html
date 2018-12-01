@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block page_name %}{% trans 'Visualisations2' %}{% endblock %}
+{% block page_name %}{% trans 'Infographic' %}{% endblock %}
 
 {% block main %}
 
@@ -20,10 +20,42 @@
         margin: 1em;
         background-color: lightgoldenrodyellow;
         width: 20vw;
+        display: flex;
+        align-content: stretch;
+        justify-content: space-around;
+    }
+
+    .infographic_single_backwards {
+        flex-flow: column
+    }
+
+    .infographic_single_inner_group {
+        display: flex;
+        justify-content: space-around;
+        text-align: center;
+    }
+
+    .infographic_single_default_inner {
+        flex-direction: column;
+    }
+
+    .infographic_single_right_inner {
+        flex-direction: column;
     }
 
     .infographic_text {
 
+    }
+
+    .infographic_number {
+        font-size: 4em;
+        padding: 0.1em;
+{#        color: purple;#}
+    }
+
+    .infographic_icon {
+        font-size:8em;
+        padding: 0.1em;
     }
     </style>
 
@@ -33,9 +65,14 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="{% static 'infographic.js' %}"></script>
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
     <script>
         $(document).ready(function(){
-            getFile("{% static 'data/101_cat_facts_care_com.txt' %}")
+            build_infographic(
+                "{% static 'data/101_cat_facts_care_com.txt' %}",
+                "{% static 'data/fa_text.txt' %}"
+            )
         });
     </script>
 
