@@ -19,6 +19,7 @@ function record_line(line) {
     // https://stackoverflow.com/questions/5917082/regular-expression-to-match-numbers-with-or-without-commas-and-decimals-in-text
 
     var regex = /(:?^|\s)(?=.)((?:0|(?:[1-9](?:\d*|\d{0,2}(?:,\d{3})*)))?(?:\.\d*[1-9])?)(?!\S)/g;
+    // regex = /[-]{0,1}[\d]*[\.]{0,1}[\d]+/g;
     var match;
     while (match = regex.exec(line)) {
         thenumbers.push(match[0].trim());
@@ -35,6 +36,21 @@ function record_line(line) {
         'text': line,
         'numbers': thenumbers
     })
+}
+
+/**
+ * Shuffles array in place.
+ * @param {Array} a items An array containing the items.
+ */
+function shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
 }
 
 function get_icon_class(text) {
@@ -99,6 +115,8 @@ function get_infographic_single_classes(text) {
 }
 
 function do_infographics(sorted_data) {
+    sorted_data = shuffle(sorted_data);
+
     for (var i = 0, len = sorted_data.length; i < len; i++) {
         if (sorted_data[i].numbers.length) {
 
@@ -108,7 +126,9 @@ function do_infographics(sorted_data) {
 
             var infographic_single = d3.select("#infographic_main").append("div")
                 .attr("class", infographic_single_classes[0])
-                .attr("id", i).attr("data-len", sorted_data[i].text.length);
+                .attr("id", i)
+                .attr("data-len", sorted_data[i].text.length)
+                .style("color", color);
 
             if (sorted_data[i].text.length > 100) {
                 infographic_single.style("flex-grow", 3)
@@ -169,6 +189,7 @@ function get_data_file_and_build(data_url) {
                 // console.log(lines[i]);
                 record_line(lines[i]);
             }
+
             // $('#raw_data').text(JSON.stringify(sorted_data));
 
             do_infographics(sorted_data);
