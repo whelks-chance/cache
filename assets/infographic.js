@@ -173,7 +173,7 @@ function get_font_file(font_name_url, data_url, get_data_file_and_build){
             // console.log(font_names);
             get_data_file_and_build(data_url);
         },
-        type: 'text'
+        dataType: 'text'
     });
 
 }
@@ -195,7 +195,8 @@ function get_data_file_and_build(data_url) {
             do_infographics(sorted_data);
 
         },
-        type: 'text'
+
+        dataType: 'text'
     });
 }
 
