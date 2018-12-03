@@ -147,7 +147,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "assets")
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "staticfiles"),
-    os.path.join(os.path.join(BASE_DIR, 'cachevis'), 'staticfiles')
+    os.path.join(os.path.join(BASE_DIR, 'cachevis'), 'static')
     # '/var/www/static/',
 ]
 
