@@ -12,3 +12,7 @@ def bank_share(request):
 
 def infographic(request):
     return render(request, 'infographic.html', {'create_tech_form': 0})
+
+
+def compare(request):
+    return render(request, 'compare.html', {'create_tech_form': 0})
