@@ -8,10 +8,15 @@
 
 
     <script src="{% static 'jquery/jquery.min.js' %}"></script>
-    {#<script type="text/javascript" src="{% static "d3/d3.js" %}"></script>#}
-    <script src="https://d3js.org/d3.v3.min.js"></script>
+{#    <script type="text/javascript" src="{% static "d3/d3.js" %}"></script>#}
+{#    <script src="https://d3js.org/d3.v3.min.js"></script>#}
+    <script src="https://d3js.org/d3.v5.min.js"></script>
 
-    <script src='{% static 'compare.js' %}'></script>
+
+    <script src="{% static 'compare.js' %}"></script>
+
+    <script src="{% static 'radarChart.js' %}"></script>
+    <script src="{% static 'radar_example.js' %}"></script>
 
    <style>
         .btn-list {
@@ -41,6 +46,9 @@
         <div id="max_val"></div>
         <div id="min_val"></div>
 
+		<div class="radarChart" id="radarChart"></div>
+        <svg id="svg3" width="960" height="500"></svg>
+
         <div id="output_dump"></div>
         <div>http://orr.gov.uk/statistics/published-stats/station-usage-estimates</div>
     </div>
@@ -49,6 +57,10 @@
         compare(
             "{% static 'data/estimates-of-station-usage-2017-18.csv' %}",
             '1718 Entries & Exits'
+        );
+
+        radar_chart(
+            "{% static 'data/estimates-of-station-usage-2017-18.csv' %}", "#radarChart"
         );
     </script>
 
