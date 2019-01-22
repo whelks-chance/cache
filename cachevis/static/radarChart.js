@@ -249,7 +249,7 @@ function RadarChart(id, data, options) {
 	.attr("y", 10)
 	.attr("font-size", "12px")
 	.attr("fill", "#404040")
-	.text("Train station stuff");
+	.text(cfg.legend_title);
 
     var legend = svg.append("g")
 	.attr("class", "legend")

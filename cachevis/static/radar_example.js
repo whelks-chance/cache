@@ -2,18 +2,32 @@ function is_in(value, array){
     return array.indexOf(value) != -1;
 }
 
-var ignore_list = [
-    "OS Grid Easting",
-    "OS Grid Northing",
-    "NLC",
-    "Large station change flag"
-];
+//https://stackoverflow.com/a/19270021/2943238
+function getRandom(arr, n) {
+    var result = new Array(n),
+        len = arr.length,
+        taken = new Array(len);
+    if (n > len)
+        throw new RangeError("getRandom: more elements taken than available");
+    while (n--) {
+        var x = Math.floor(Math.random() * len);
+        result[n] = arr[x in taken ? taken[x] : x];
+        taken[x] = --len in taken ? taken[len] : len;
+    }
+    return result;
+}
 
-function radar_chart(url, div_id){
 
-    d3.csv(url).then(function(data) {
+function build_radar(){
 
-        data = data.slice(0, 5);
+}
+
+function radar_chart(url, div_id, ignore_list, data_title, legend_title){
+
+    d3.csv(url).then(function(all_data) {
+
+        // data = data.slice(0, 5);
+        var data = getRandom(all_data, 5)
         console.log(data);
 
         var all_data_rearranged = [];
@@ -24,7 +38,7 @@ function radar_chart(url, div_id){
             var data_rearranged = [];
             var single_item = data[b];
 
-            data_titles.push(single_item['Station Name']);
+            data_titles.push(single_item[data_title]);
 
             var keys_arr = Object.keys(single_item);
             console.log(keys_arr);
@@ -68,7 +82,8 @@ function radar_chart(url, div_id){
             levels: 5,
             roundStrokes: true,
             color: color,
-            data_titles: data_titles
+            data_titles: data_titles,
+            legend_title: legend_title
         };
 
         console.log('got here pre radarChart 3')

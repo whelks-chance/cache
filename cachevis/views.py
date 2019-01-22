@@ -16,3 +16,11 @@ def infographic(request):
 
 def compare(request):
     return render(request, 'compare.html', {'create_tech_form': 0})
+
+
+def svg_test(request):
+    return render(request, 'svg_test.html', {'create_tech_form': 0})
+
+
+def sparql(request):
+    return render(request, 'sparql.html', {'create_tech_form': 0})

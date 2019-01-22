@@ -8,9 +8,10 @@
 
 
     <script src="{% static 'jquery/jquery.min.js' %}"></script>
-{#    <script type="text/javascript" src="{% static "d3/d3.js" %}"></script>#}
-{#    <script src="https://d3js.org/d3.v3.min.js"></script>#}
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    {#    <script type="text/javascript" src="{% static "d3/d3.js" %}"></script>#}
+    {#    <script src="https://d3js.org/d3.v3.min.js"></script>#}
+{#    <script src="https://d3js.org/d3.v5.min.js"></script>#}
+    <script src="{% static 'd3/v5/d3.v5.min.js' %}"></script>
 
 
     <script src="{% static 'compare.js' %}"></script>
@@ -18,7 +19,7 @@
     <script src="{% static 'radarChart.js' %}"></script>
     <script src="{% static 'radar_example.js' %}"></script>
 
-   <style>
+    <style>
         .btn-list {
             display: flex;
             flex-wrap: wrap;
@@ -32,10 +33,10 @@
             margin-right: 0.5em;
         }
 
-   .bar-chart {
-    background-color: #C7D9D9;
-}
-   </style>
+        .bar-chart {
+            background-color: #C7D9D9;
+        }
+    </style>
 
     <div>
         <svg id="svg2"></svg>
@@ -46,8 +47,10 @@
         <div id="max_val"></div>
         <div id="min_val"></div>
 
-		<div class="radarChart" id="radarChart"></div>
+        <div class="radarChart" id="radarChart"></div>
         <svg id="svg3" width="960" height="500"></svg>
+
+        <div class="radarChart2" id="radarChart2"></div>
 
         <div id="output_dump"></div>
         <div>http://orr.gov.uk/statistics/published-stats/station-usage-estimates</div>
@@ -59,8 +62,30 @@
             '1718 Entries & Exits'
         );
 
+        var ignore_list = [
+            "OS Grid Easting",
+            "OS Grid Northing",
+            "NLC",
+            "Large station change flag"
+        ];
         radar_chart(
-            "{% static 'data/estimates-of-station-usage-2017-18.csv' %}", "#radarChart"
+            "{% static 'data/estimates-of-station-usage-2017-18.csv' %}",
+            "#radarChart",
+            ignore_list,
+            'Station Name',
+            "Station entries"
+        );
+
+        var ignore_list = [
+            "date",
+            "DwellingType: Allcategories:Accommodationtype;measures:Value"
+        ];
+        radar_chart(
+            "{% static 'data/wales_bua_accommodation.csv' %}",
+            "#radarChart2",
+            ignore_list,
+            'geography',
+            "Accommodation in Built Up Areas"
         );
     </script>
 
