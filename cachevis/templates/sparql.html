@@ -12,7 +12,7 @@
     <script src="{% static 'jquery.sparql.js' %}"></script>
     <script src="{% static 'urlEncode.js' %}"></script>
     <script src="{% static 'd3/d3.js' %}"></script>
-    {#    <script src="{% static 'd3/v5/d3.v5.min.js' %}"></script>#}
+    <script src="{% static 'moment-with-locales.js' %}"></script>
 
 
     <script>
@@ -41,43 +41,43 @@
             "          ukhpi:housePriceIndex ?hpi\n" +
             "  FILTER (\n" +
             "    ?date > \"2008-12-31\"^^xsd:date &&\n" +
-            "    ?date < \"2019-03-01\"^^xsd:date\n" +
+            "    ?date < \"2013-03-01\"^^xsd:date\n" +
             "  )\n" +
             "}";
 
-{#        var query = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +#}
-{#            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +#}
-{#            "prefix owl: <http://www.w3.org/2002/07/owl#>\n" +#}
-{#            "prefix xsd: <http://www.w3.org/2001/XMLSchema#>\n" +#}
-{#            "prefix sr: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/>\n" +#}
-{#            "prefix ukhpi: <http://landregistry.data.gov.uk/def/ukhpi/>\n" +#}
-{#            "prefix lrppi: <http://landregistry.data.gov.uk/def/ppi/>\n" +#}
-{#            "prefix skos: <http://www.w3.org/2004/02/skos/core#>\n" +#}
-{#            "prefix lrcommon: <http://landregistry.data.gov.uk/def/common/>\n" +#}
-{#            "\n" +#}
-{#            "# Returns the Price Paid data from the default graph for each transaction record having\n" +#}
-{#            "# an address with the given postcode.\n" +#}
-{#            "# The postcode to query is set using SPARQL 1.1's 'values' clause\n" +#}
-{#            "\n" +#}
-{#            "SELECT ?paon ?saon ?street ?town ?county ?postcode ?amount ?date ?category\n" +#}
-{#            "WHERE\n" +#}
-{#            "{\n" +#}
-{#            "  VALUES ?postcode {\"CF5 2PS\"^^xsd:string}\n" +#}
-{#            "\n" +#}
-{#            "  ?addr lrcommon:postcode ?postcode.\n" +#}
-{#            "\n" +#}
-{#            "  ?transx lrppi:propertyAddress ?addr ;\n" +#}
-{#            "          lrppi:pricePaid ?amount ;\n" +#}
-{#            "          lrppi:transactionDate ?date ;\n" +#}
-{#            "          lrppi:transactionCategory/skos:prefLabel ?category.\n" +#}
-{#            "\n" +#}
-{#            "  OPTIONAL {?addr lrcommon:county ?county}\n" +#}
-{#            "  OPTIONAL {?addr lrcommon:paon ?paon}\n" +#}
-{#            "  OPTIONAL {?addr lrcommon:saon ?saon}\n" +#}
-{#            "  OPTIONAL {?addr lrcommon:street ?street}\n" +#}
-{#            "  OPTIONAL {?addr lrcommon:town ?town}\n" +#}
-{#            "}\n" +#}
-{#            "ORDER BY ?date";#}
+        var query = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
+            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
+            "prefix owl: <http://www.w3.org/2002/07/owl#>\n" +
+            "prefix xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+            "prefix sr: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/>\n" +
+            "prefix ukhpi: <http://landregistry.data.gov.uk/def/ukhpi/>\n" +
+            "prefix lrppi: <http://landregistry.data.gov.uk/def/ppi/>\n" +
+            "prefix skos: <http://www.w3.org/2004/02/skos/core#>\n" +
+            "prefix lrcommon: <http://landregistry.data.gov.uk/def/common/>\n" +
+            "\n" +
+            "# Returns the Price Paid data from the default graph for each transaction record having\n" +
+            "# an address with the given postcode.\n" +
+            "# The postcode to query is set using SPARQL 1.1's 'values' clause\n" +
+            "\n" +
+            "SELECT ?paon ?saon ?street ?town ?county ?postcode ?amount ?date ?category\n" +
+            "WHERE\n" +
+            "{\n" +
+            "  VALUES ?postcode {\"CF5 2PS\"^^xsd:string}\n" +
+            "\n" +
+            "  ?addr lrcommon:postcode ?postcode.\n" +
+            "\n" +
+            "  ?transx lrppi:propertyAddress ?addr ;\n" +
+            "          lrppi:pricePaid ?amount ;\n" +
+            "          lrppi:transactionDate ?date ;\n" +
+            "          lrppi:transactionCategory/skos:prefLabel ?category.\n" +
+            "\n" +
+            "  OPTIONAL {?addr lrcommon:county ?county}\n" +
+            "  OPTIONAL {?addr lrcommon:paon ?paon}\n" +
+            "  OPTIONAL {?addr lrcommon:saon ?saon}\n" +
+            "  OPTIONAL {?addr lrcommon:street ?street}\n" +
+            "  OPTIONAL {?addr lrcommon:town ?town}\n" +
+            "}\n" +
+            "ORDER BY ?date";
 
         {#	var url = 'http://statistics.data.gov.uk/sparql.json';#}
         var url = 'http://landregistry.data.gov.uk/landregistry/query';
@@ -112,13 +112,13 @@
                     }
                 ];
 
-{#                var item_name_key = 'paon';#}
-{#                var item_value_key = 'amount'#}
+                var item_name_key = 'paon';
+                var item_value_key = 'amount'
 
-                var item_name_key = 'region';
-                var item_value_key = 'hpi';
+                {#                var item_name_key = 'region';#}
+                {#                var item_value_key = 'hpi';#}
 
-                var current_year = data['results']['bindings'][0]['date']['value']; //.split('-')[0];
+                var current_year = data['results']['bindings'][0]['date']['value'] //.split('-')[0];
                 var data_by_year = [];
                 var seen_item_names = [];
                 var current_year_data = {
@@ -129,7 +129,7 @@
                 // Vital that data is in date order here.
                 for(var a in data['results']['bindings']){
                     var dat = data['results']['bindings'][a];
-                    var item_name = dat[item_name_key]['value'].split('/')[6];
+                    var item_name = dat[item_name_key]['value'] //.split('/')[6];
 
                     // If we haven't seen this address before, backfill previous years with NaN's
                     if (seen_item_names.indexOf(item_name) === -1){
@@ -140,11 +140,9 @@
                     seen_item_names.push(item_name);
 
                     var amount = parseFloat(dat[item_value_key]['value']);
+                    var year = dat['date']['value'] //.split('-')[0];
 
-                    var year = dat['date']['value']; //.split('-')[0];
-                    {#                    console.log(year)#}
-
-                    if(year == current_year){
+                    if(year === current_year){
                         // This data is for the same year as before, so add to current years object
                         current_year_data[item_name] = amount
                     }else{
@@ -162,7 +160,7 @@
                 // Push final years data to the arr
                 data_by_year.push(current_year_data);
 
-                console.log(current_year)
+                console.log(current_year);
 
                 console.log(data_by_year);
 
@@ -190,7 +188,12 @@
 
     <script>
 
+        // Orginally from http://bl.ocks.org/cgroll/491344b798af8dcc8dc4
+        // Messed about with by IanH
+
         function build_linechart(data) {
+            console.log('raw data');
+            console.log(data);
 
             // define margins
             var margin = {top: 20, right: 80, bottom: 30, left: 150};
@@ -231,7 +234,7 @@
             var parseDate = d3.timeParse("%Y-%m-%d");
 
             var line = d3.line()
-                .curve(d3.curveCatmullRom.alpha(0));
+                .curve(d3.curveCatmullRom.alpha(0.5));
             line.x(function(d) { return x(d.idx); });
             line.y(function(d) { return y(d.gdp); });
 
@@ -245,7 +248,7 @@
 
             var tseries = color.domain().map(function(name) {
 
-                dataWithNaN = data.map(function(d) {
+                var dataWithNaN = data.map(function(d) {
                     return {idx: d.idx, gdp: +d[name]};
                 });
 
@@ -289,14 +292,87 @@
             gdp.append("path")
                 .attr("class", "line")
                 .attr("d", function(d) { return line(d.values); })
-                .style("stroke", function(d) { return color(d.name); });
+                .style("stroke", function(d) { return color(d.name); })
 
-{#             gdp.append("text")#}
-{#                 .datum(function(d) { return {name: d.idx, value: d.values[d.values.length - 1]}; })#}
-{#                 .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.idx) + ")"; })#}
-{#                 .attr("x", 3)#}
-{#                 .attr("dy", ".35em")#}
-{#                 .text(function(d) { return d.name; });#}
+                .on("mouseenter", function(d) {
+{#                    console.log('enter')#}
+{#                    console.log(d)#}
+{#                    console.log('this')#}
+{#                    console.log(this)#}
+
+                    for(var a in d.values){
+                        d3.select(this.parentNode)
+                        .append("text")
+                        .attr("x", function(d) {
+                            return x(d.values[a].idx) - 200;
+                        })
+                        .attr("y", function(d) {
+                            return y(d.values[a].gdp) + 30;
+                        })
+                        .attr("dx", 5)
+                        .attr("dy", 10)
+                        .attr("font-size", "20px")
+                        .attr("fill", "black")
+                        .text(
+                            moment(d.values[a].idx).format('Do MMM YY') +
+                            " : £" + d.values[a].gdp
+                        );
+
+                        d3.select(this.parentNode)
+                        .append("circle")
+                        .attr("cx", function(d) {
+                            return x(d.values[a].idx);
+                        })
+                        .attr("cy", function(d) {
+                            return y(d.values[a].gdp);
+                        })
+                        .attr("r", 8)
+                        .attr("fill", function(d) { return color(d.name); })
+
+                    }
+
+
+                    d3.select(this)
+                    {#                        .select("path")#}
+                        .transition()
+                                                .ease(d3.easeElastic)
+                        .style("stroke-width", "5px")
+                })
+                .on("mouseleave", function(d) {
+
+                    			d3.select(this.parentNode)
+                    			  .selectAll("text")
+                    			  .transition()
+                    			  .style("opacity", 0)
+                    			  .transition()
+                    			  .remove();
+
+                    			d3.select(this.parentNode)
+                    			  .selectAll("circle")
+                    			  .transition()
+                    			  .style("opacity", 0)
+                    			  .transition()
+                    			  .remove();
+
+                    d3.select(this)
+                        .transition()
+                                                .ease(d3.easeElastic)
+                        .style("stroke-width", "3px")
+                        .style("stroke", function(d) { return color(d.name); })
+
+
+
+                });
+
+
+
+
+            {#             gdp.append("text")#}
+            {#                 .datum(function(d) { return {name: d.idx, value: d.values[d.values.length - 1]}; })#}
+            {#                 .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.idx) + ")"; })#}
+            {#                 .attr("x", 3)#}
+            {#                 .attr("dy", ".35em")#}
+            {#                 .text(function(d) { return d.name; });#}
 
             {# }); #}
 
