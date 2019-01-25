@@ -33,26 +33,26 @@
 
         {#        var query = 'SELECT * WHERE {?s ?p ?o} LIMIT 10';#}
 
-        var query = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
-            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-            "prefix owl: <http://www.w3.org/2002/07/owl#>\n" +
-            "prefix xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
-            "prefix sr: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/>\n" +
-            "prefix ukhpi: <http://landregistry.data.gov.uk/def/ukhpi/>\n" +
-            "prefix lrppi: <http://landregistry.data.gov.uk/def/ppi/>\n" +
-            "prefix skos: <http://www.w3.org/2004/02/skos/core#>\n" +
-            "prefix lrcommon: <http://landregistry.data.gov.uk/def/common/>\n" +
-            "\n" +
-            "# House price index for all regions within a given date range\n" +
-            "SELECT ?region ?date ?hpi\n" +
-            "{\n" +
-            "  ?region ukhpi:refPeriodStart ?date ;\n" +
-            "          ukhpi:housePriceIndex ?hpi\n" +
-            "  FILTER (\n" +
-            "    ?date > \"2008-12-31\"^^xsd:date &&\n" +
-            "    ?date < \"2013-03-01\"^^xsd:date\n" +
-            "  )\n" +
-            "}";
+{#        var query = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +#}
+{#            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +#}
+{#            "prefix owl: <http://www.w3.org/2002/07/owl#>\n" +#}
+{#            "prefix xsd: <http://www.w3.org/2001/XMLSchema#>\n" +#}
+{#            "prefix sr: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/>\n" +#}
+{#            "prefix ukhpi: <http://landregistry.data.gov.uk/def/ukhpi/>\n" +#}
+{#            "prefix lrppi: <http://landregistry.data.gov.uk/def/ppi/>\n" +#}
+{#            "prefix skos: <http://www.w3.org/2004/02/skos/core#>\n" +#}
+{#            "prefix lrcommon: <http://landregistry.data.gov.uk/def/common/>\n" +#}
+{#            "\n" +#}
+{#            "# House price index for all regions within a given date range\n" +#}
+{#            "SELECT ?region ?date ?hpi\n" +#}
+{#            "{\n" +#}
+{#            "  ?region ukhpi:refPeriodStart ?date ;\n" +#}
+{#            "          ukhpi:housePriceIndex ?hpi\n" +#}
+{#            "  FILTER (\n" +#}
+{#            "    ?date > \"2008-12-31\"^^xsd:date &&\n" +#}
+{#            "    ?date < \"2013-03-01\"^^xsd:date\n" +#}
+{#            "  )\n" +#}
+{#            "}";#}
 
         var query = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
             "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
@@ -71,7 +71,7 @@
             "SELECT ?paon ?saon ?street ?town ?county ?postcode ?amount ?date ?category\n" +
             "WHERE\n" +
             "{\n" +
-            "  VALUES ?postcode {\"CF14 4AD\"^^xsd:string}\n" +
+            "  VALUES ?postcode {\"CF5 2PS\"^^xsd:string}\n" +
             "\n" +
             "  ?addr lrcommon:postcode ?postcode.\n" +
             "\n" +
@@ -124,8 +124,8 @@
                 var item_name_key = 'paon';
                 var item_value_key = 'amount'
 
-                {#                var item_name_key = 'region';#}
-                {#                var item_value_key = 'hpi';#}
+                {#                                var item_name_key = 'region';#}
+                {#                                var item_value_key = 'hpi';#}
 
                 var current_year = data['results']['bindings'][0]['date']['value'] //.split('-')[0];
                 var data_by_year = [];
@@ -192,12 +192,17 @@
         stroke-width: 2px;
         z-index: 1;
     }
+    .house_number {
+        font-size: 20px;
+        font-family: "Helvetica", Arial, sans-serif;
+        color: black;
+        height: 1.2em;
+    }
 
     .rollover_text {
         font-size: 20px;
         font-family: "Helvetica", Arial, sans-serif;
         fill: black;
-        z-index: 9999;
         pointer-events: none;
     }
 
@@ -248,6 +253,8 @@
 
             var line = d3.line()
                 .curve(d3.curveCatmullRom.alpha(0.5));
+{#                .curve(d3.curveMonotoneX);#}
+
             line.x(function(d) { return x(d.idx); });
             line.y(function(d) { return y(d.gdp); });
 
@@ -275,6 +282,8 @@
 
             console.log(tseries);
 
+            {#            tseries = tseries.slice(1, 20)#}
+
             // Update the x axis extents so data points don't appear in the corner of the graph
             var date_extent = d3.extent(data, function(d) { return d.idx; });
             var updated_extent = [moment(date_extent[0]).subtract(90, 'days'), moment(date_extent[1]).add(90, 'days')];
@@ -300,6 +309,11 @@
                 .attr("dy", ".71em")
                 .style("text-anchor", "end")
                 .text("GDP in bn $");
+
+            {#            svg.append("text").attr("id", "house_number")#}
+            {#                .attr("x", 10).attr("y", 10)#}
+            {#                .attr("class", "rollover_text")#}
+            {#                .text("");#}
 
             var single_point_tseries = []
             for (var a in tseries) {
@@ -345,7 +359,6 @@
                         .attr("dy", 10)
                         .attr("class", "rollover_text")
                         .text(
-                            d.name + ' : ' +
                             moment(d.values[0].idx).format('Do MMM YY') +
                             " : £" + d.values[0].gdp
                         );
@@ -388,7 +401,7 @@
                 .on("mouseenter", function(d) {
 
                     d3.selectAll('.line').style("stroke-opacity", "0.2");
-                    d3.selectAll('.single_point').style("fill-opacity", "0.2");
+                    d3.selectAll('.point').style("fill-opacity", "0.2");
 
                     d3.select(this)
                         .transition()
@@ -420,12 +433,13 @@
                             .attr("dy", 10)
                             .attr("class", "rollover_text")
                             .text(
-                                d.name + ' : ' +
+                                {#                                d.name + ' : ' +#}
                                 moment(d.values[a].idx).format('Do MMM YY') +
                                 " : £" + d.values[a].gdp
                             );
 
                     }
+                    d3.select('#house_number').text("House number/name : " + d.name);
 
                     d3.select(this.parentNode).moveToFront()
 
@@ -433,7 +447,8 @@
                 .on("mouseleave", function(d) {
 
                     d3.selectAll('.line').style("stroke-opacity", "1");
-                    d3.selectAll('.single_point').style("fill-opacity", "1");
+                    d3.selectAll('.point').style("fill-opacity", "1");
+                    d3.select('#house_number').text(" ");
 
                     d3.select(this.parentNode)
                         .selectAll("text")
@@ -462,6 +477,7 @@
         }
     </script>
 
+    <div class="house_number" id="house_number"></div>
     <div id="line_graph"></div>
 
     <h1>Results</h1>
