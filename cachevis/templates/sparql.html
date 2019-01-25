@@ -16,10 +16,19 @@
 
 
     <script>
-        var cbfunc = function(results) {
-            $("#results").val(JSON.stringify(results));
-        };
-
+        {#        d3.selection.prototype.moveToFront = function() {#}
+        {#            return this.each(function(){#}
+        {#                this.parentNode.appendChild(this);#}
+        {#            });#}
+        {#        };#}
+        {#        d3.selection.prototype.moveToBack = function() {#}
+        {#            return this.each(function() {#}
+        {#                var firstChild = this.parentNode.firstChild;#}
+        {#                if (firstChild) {#}
+        {#                    this.parentNode.insertBefore(this, firstChild);#}
+        {#                }#}
+        {#            });#}
+        {#        };#}
 
 
         {#        var query = 'SELECT * WHERE {?s ?p ?o} LIMIT 10';#}
@@ -62,7 +71,7 @@
             "SELECT ?paon ?saon ?street ?town ?county ?postcode ?amount ?date ?category\n" +
             "WHERE\n" +
             "{\n" +
-            "  VALUES ?postcode {\"CF5 2PS\"^^xsd:string}\n" +
+            "  VALUES ?postcode {\"CF14 4AD\"^^xsd:string}\n" +
             "\n" +
             "  ?addr lrcommon:postcode ?postcode.\n" +
             "\n" +
@@ -124,7 +133,6 @@
                 var current_year_data = {
                     'idx': current_year //+ '-01-01'
                 };
-                {#                console.log(current_year)#}
 
                 // Vital that data is in date order here.
                 for(var a in data['results']['bindings']){
@@ -182,12 +190,26 @@
         fill: none;
         stroke: steelblue;
         stroke-width: 2px;
+        z-index: 1;
+    }
+
+    .rollover_text {
+        font-size: 20px;
+        font-family: "Helvetica", Arial, sans-serif;
+        fill: black;
+        z-index: 9999;
+        pointer-events: none;
     }
 
     </style>
 
     <script>
 
+        d3.selection.prototype.moveToFront = function() {
+            return this.each(function(){
+                this.parentNode.appendChild(this);
+            });
+        };
         // Orginally from http://bl.ocks.org/cgroll/491344b798af8dcc8dc4
         // Messed about with by IanH
 
@@ -216,17 +238,8 @@
 
             var color = d3.scaleOrdinal(d3.schemeCategory10);
 
-            {#            var xAxis = d3.svg.axis()#}
-            {#                .scale(x)#}
-            {#                .orient("bottom");#}
-
             var xAxis = d3.select(".axis")
                 .call(d3.axisBottom(x));
-
-            {#            var yAxis = d3.svg.axis()#}
-            {#                .scale(y)#}
-            {#                .orient("left")#}
-            {#                .ticks(5);#}
 
             var yAxis = d3.select(".axis")
                 .call(d3.axisLeft(y));
@@ -262,11 +275,15 @@
 
             console.log(tseries);
 
-            x.domain(d3.extent(data, function(d) { return d.idx; }));
+            // Update the x axis extents so data points don't appear in the corner of the graph
+            var date_extent = d3.extent(data, function(d) { return d.idx; });
+            var updated_extent = [moment(date_extent[0]).subtract(90, 'days'), moment(date_extent[1]).add(90, 'days')];
+            x.domain(updated_extent);
 
+            // + - 10000 for the same reason
             y.domain([
-                d3.min(tseries, function(c) { return d3.min(c.values, function(v) { return v.gdp; }); }),
-                d3.max(tseries, function(c) { return d3.max(c.values, function(v) { return v.gdp; }); })
+                d3.min(tseries, function(c) { return d3.min(c.values, function(v) { return v.gdp - 10000; }); }),
+                d3.max(tseries, function(c) { return d3.max(c.values, function(v) { return v.gdp + 10000; }); })
             ]);
 
             svg.append("g")
@@ -284,97 +301,163 @@
                 .style("text-anchor", "end")
                 .text("GDP in bn $");
 
+            var single_point_tseries = []
+            for (var a in tseries) {
+                if (tseries[a].values.length === 1) {
+                    single_point_tseries.push(tseries[a])
+                }
+            }
+
+            var single_point = svg.selectAll(".single_point")
+                .data(single_point_tseries)
+                .enter().append("g")
+                .attr("class", "single_point");
+
+            single_point.append("circle")
+                .attr("class", "point")
+                .attr("cx", function(d) {
+                    return x(d.values[0].idx);
+                })
+                .attr("cy", function(d) {
+                    return y(d.values[0].gdp);
+                })
+                .attr("r", 5)
+                .attr("fill", function(d) { return color(d.name); })
+                .on("mouseenter", function(d) {
+
+                    d3.selectAll('.line').style("stroke-opacity", "0.2");
+                    d3.selectAll('.point').style("fill-opacity", "0.2");
+
+                    d3.select(this)
+                        .transition()
+                        .ease(d3.easeElastic)
+                        .style("fill-opacity", "1");
+
+                    d3.select(this.parentNode)
+                        .append("text")
+                        .attr("x", function(d) {
+                            return x(d.values[0].idx) - 200;
+                        })
+                        .attr("y", function(d) {
+                            return y(d.values[0].gdp);
+                        })
+                        .attr("dx", 5)
+                        .attr("dy", 10)
+                        .attr("class", "rollover_text")
+                        .text(
+                            d.name + ' : ' +
+                            moment(d.values[0].idx).format('Do MMM YY') +
+                            " : £" + d.values[0].gdp
+                        );
+
+
+                    d3.select(this.parentNode).moveToFront()
+
+                })
+                .on("mouseleave", function(d) {
+
+                    d3.selectAll('.line').style("stroke-opacity", "1");
+                    d3.selectAll('.point').style("fill-opacity", "1");
+
+                    d3.select(this.parentNode)
+                        .selectAll("text")
+                        .transition()
+                        .style("opacity", 0)
+                        .transition()
+                        .remove();
+
+                });
+
+
             var gdp = svg.selectAll(".gdp")
                 .data(tseries)
                 .enter().append("g")
                 .attr("class", "gdp");
 
+            {#            gdp.append("path")#}
+            {#                .attr("class", "invisible_line")#}
+            {#                .attr("d", function(d) { return line(d.values); })#}
+            {#                .style("stroke", function(d) { return color(d.name); })#}
+            {#                .style("stroke-opacity", "0.1")#}
+            {#                .style("stroke-width", "10")#}
+
             gdp.append("path")
                 .attr("class", "line")
                 .attr("d", function(d) { return line(d.values); })
                 .style("stroke", function(d) { return color(d.name); })
-
                 .on("mouseenter", function(d) {
-{#                    console.log('enter')#}
-{#                    console.log(d)#}
-{#                    console.log('this')#}
-{#                    console.log(this)#}
+
+                    d3.selectAll('.line').style("stroke-opacity", "0.2");
+                    d3.selectAll('.single_point').style("fill-opacity", "0.2");
+
+                    d3.select(this)
+                        .transition()
+                        .ease(d3.easeElastic)
+                        .style("stroke-width", "5px")
+                        .style("stroke-opacity", "1")
 
                     for(var a in d.values){
                         d3.select(this.parentNode)
-                        .append("text")
-                        .attr("x", function(d) {
-                            return x(d.values[a].idx) - 200;
-                        })
-                        .attr("y", function(d) {
-                            return y(d.values[a].gdp) + 30;
-                        })
-                        .attr("dx", 5)
-                        .attr("dy", 10)
-                        .attr("font-size", "20px")
-                        .attr("fill", "black")
-                        .text(
-                            moment(d.values[a].idx).format('Do MMM YY') +
-                            " : £" + d.values[a].gdp
-                        );
+                            .append("circle")
+                            .attr("cx", function(d) {
+                                return x(d.values[a].idx);
+                            })
+                            .attr("cy", function(d) {
+                                return y(d.values[a].gdp);
+                            })
+                            .attr("r", 8)
+                            .attr("fill", function(d) { return color(d.name); })
 
                         d3.select(this.parentNode)
-                        .append("circle")
-                        .attr("cx", function(d) {
-                            return x(d.values[a].idx);
-                        })
-                        .attr("cy", function(d) {
-                            return y(d.values[a].gdp);
-                        })
-                        .attr("r", 8)
-                        .attr("fill", function(d) { return color(d.name); })
+                            .append("text")
+                            .attr("x", function(d) {
+                                return x(d.values[a].idx) - 200;
+                            })
+                            .attr("y", function(d) {
+                                return y(d.values[a].gdp);
+                            })
+                            .attr("dx", 5)
+                            .attr("dy", 10)
+                            .attr("class", "rollover_text")
+                            .text(
+                                d.name + ' : ' +
+                                moment(d.values[a].idx).format('Do MMM YY') +
+                                " : £" + d.values[a].gdp
+                            );
 
                     }
 
+                    d3.select(this.parentNode).moveToFront()
 
-                    d3.select(this)
-                    {#                        .select("path")#}
-                        .transition()
-                                                .ease(d3.easeElastic)
-                        .style("stroke-width", "5px")
                 })
                 .on("mouseleave", function(d) {
 
-                    			d3.select(this.parentNode)
-                    			  .selectAll("text")
-                    			  .transition()
-                    			  .style("opacity", 0)
-                    			  .transition()
-                    			  .remove();
+                    d3.selectAll('.line').style("stroke-opacity", "1");
+                    d3.selectAll('.single_point').style("fill-opacity", "1");
 
-                    			d3.select(this.parentNode)
-                    			  .selectAll("circle")
-                    			  .transition()
-                    			  .style("opacity", 0)
-                    			  .transition()
-                    			  .remove();
+                    d3.select(this.parentNode)
+                        .selectAll("text")
+                        .transition()
+                        .style("opacity", 0)
+                        .transition()
+                        .remove();
+
+                    d3.select(this.parentNode)
+                        .selectAll("circle")
+                        .transition()
+                        .style("opacity", 0)
+                        .transition()
+                        .remove();
 
                     d3.select(this)
                         .transition()
-                                                .ease(d3.easeElastic)
+                        .ease(d3.easeElastic)
                         .style("stroke-width", "3px")
                         .style("stroke", function(d) { return color(d.name); })
-
-
 
                 });
 
 
-
-
-            {#             gdp.append("text")#}
-            {#                 .datum(function(d) { return {name: d.idx, value: d.values[d.values.length - 1]}; })#}
-            {#                 .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.idx) + ")"; })#}
-            {#                 .attr("x", 3)#}
-            {#                 .attr("dy", ".35em")#}
-            {#                 .text(function(d) { return d.name; });#}
-
-            {# }); #}
 
         }
     </script>
