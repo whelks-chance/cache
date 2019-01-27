@@ -57,7 +57,7 @@ urlpatterns = [
     url(r'cachevis/infographic', cachevis_views.infographic, name='infographic'),
     url(r'cachevis/compare', cachevis_views.compare, name='compare'),
     url(r'cachevis/svg_test', cachevis_views.svg_test, name='svg_test'),
-    url(r'cachevis/sparql', cachevis_views.sparql, name='sparql'),
+    url(r'cachevis/sparql/(?P<postcode>[\w|\W]+)/$', cachevis_views.sparql, name='sparql'),
 
     #   Be careful not to let nginx forward this to the actual ckan server
     url(r'^local_ckan/search', views.ckan_search, name='ckan_search'),

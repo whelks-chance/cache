@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block page_name %}{% trans 'Examples of usage - jQuery SPARQL' %}{% endblock %}
+{% block page_name %}{% trans 'Examples of usage - jQuery SPARQL' %} - {{ postcode }}{% endblock %}
 
 {% block main %}
 
@@ -33,26 +33,26 @@
 
         {#        var query = 'SELECT * WHERE {?s ?p ?o} LIMIT 10';#}
 
-{#        var query = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +#}
-{#            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +#}
-{#            "prefix owl: <http://www.w3.org/2002/07/owl#>\n" +#}
-{#            "prefix xsd: <http://www.w3.org/2001/XMLSchema#>\n" +#}
-{#            "prefix sr: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/>\n" +#}
-{#            "prefix ukhpi: <http://landregistry.data.gov.uk/def/ukhpi/>\n" +#}
-{#            "prefix lrppi: <http://landregistry.data.gov.uk/def/ppi/>\n" +#}
-{#            "prefix skos: <http://www.w3.org/2004/02/skos/core#>\n" +#}
-{#            "prefix lrcommon: <http://landregistry.data.gov.uk/def/common/>\n" +#}
-{#            "\n" +#}
-{#            "# House price index for all regions within a given date range\n" +#}
-{#            "SELECT ?region ?date ?hpi\n" +#}
-{#            "{\n" +#}
-{#            "  ?region ukhpi:refPeriodStart ?date ;\n" +#}
-{#            "          ukhpi:housePriceIndex ?hpi\n" +#}
-{#            "  FILTER (\n" +#}
-{#            "    ?date > \"2008-12-31\"^^xsd:date &&\n" +#}
-{#            "    ?date < \"2013-03-01\"^^xsd:date\n" +#}
-{#            "  )\n" +#}
-{#            "}";#}
+        {#        var query = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +#}
+        {#            "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +#}
+        {#            "prefix owl: <http://www.w3.org/2002/07/owl#>\n" +#}
+        {#            "prefix xsd: <http://www.w3.org/2001/XMLSchema#>\n" +#}
+        {#            "prefix sr: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/>\n" +#}
+        {#            "prefix ukhpi: <http://landregistry.data.gov.uk/def/ukhpi/>\n" +#}
+        {#            "prefix lrppi: <http://landregistry.data.gov.uk/def/ppi/>\n" +#}
+        {#            "prefix skos: <http://www.w3.org/2004/02/skos/core#>\n" +#}
+        {#            "prefix lrcommon: <http://landregistry.data.gov.uk/def/common/>\n" +#}
+        {#            "\n" +#}
+        {#            "# House price index for all regions within a given date range\n" +#}
+        {#            "SELECT ?region ?date ?hpi\n" +#}
+        {#            "{\n" +#}
+        {#            "  ?region ukhpi:refPeriodStart ?date ;\n" +#}
+        {#            "          ukhpi:housePriceIndex ?hpi\n" +#}
+        {#            "  FILTER (\n" +#}
+        {#            "    ?date > \"1008-12-31\"^^xsd:date &&\n" +#}
+        {#            "    ?date < \"2018-03-01\"^^xsd:date\n" +#}
+        {#            "  )\n" +#}
+        {#            "}";#}
 
         var query = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +
             "prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
@@ -71,7 +71,7 @@
             "SELECT ?paon ?saon ?street ?town ?county ?postcode ?amount ?date ?category\n" +
             "WHERE\n" +
             "{\n" +
-            "  VALUES ?postcode {\"CF5 2PS\"^^xsd:string}\n" +
+            "  VALUES ?postcode {\"{{ postcode }}\"^^xsd:string}\n" +
             "\n" +
             "  ?addr lrcommon:postcode ?postcode.\n" +
             "\n" +
@@ -124,8 +124,8 @@
                 var item_name_key = 'paon';
                 var item_value_key = 'amount'
 
-                {#                                var item_name_key = 'region';#}
-                {#                                var item_value_key = 'hpi';#}
+                {#                                                var item_name_key = 'region';#}
+                {#                                                var item_value_key = 'hpi';#}
 
                 var current_year = data['results']['bindings'][0]['date']['value'] //.split('-')[0];
                 var data_by_year = [];
@@ -137,7 +137,11 @@
                 // Vital that data is in date order here.
                 for(var a in data['results']['bindings']){
                     var dat = data['results']['bindings'][a];
-                    var item_name = dat[item_name_key]['value'] //.split('/')[6];
+                    var item_name = dat[item_name_key]['value'] //.split('/')[6];;
+
+                    if(dat['saon']) {
+                        item_name += " " + dat['saon']['value']
+                    }  //
 
                     // If we haven't seen this address before, backfill previous years with NaN's
                     if (seen_item_names.indexOf(item_name) === -1){
@@ -206,6 +210,10 @@
         pointer-events: none;
     }
 
+    .data_point {
+        pointer-events: none;
+    }
+
     </style>
 
     <script>
@@ -253,7 +261,7 @@
 
             var line = d3.line()
                 .curve(d3.curveCatmullRom.alpha(0.5));
-{#                .curve(d3.curveMonotoneX);#}
+            {#                .curve(d3.curveMonotoneX);#}
 
             line.x(function(d) { return x(d.idx); });
             line.y(function(d) { return y(d.gdp); });
@@ -282,7 +290,9 @@
 
             console.log(tseries);
 
-            {#            tseries = tseries.slice(1, 20)#}
+            {#            tseries = tseries.slice(1, 100)#}
+            var yaxis_padding = 10000;
+            {#            var yaxis_padding = 0;#}
 
             // Update the x axis extents so data points don't appear in the corner of the graph
             var date_extent = d3.extent(data, function(d) { return d.idx; });
@@ -291,8 +301,8 @@
 
             // + - 10000 for the same reason
             y.domain([
-                d3.min(tseries, function(c) { return d3.min(c.values, function(v) { return v.gdp - 10000; }); }),
-                d3.max(tseries, function(c) { return d3.max(c.values, function(v) { return v.gdp + 10000; }); })
+                d3.min(tseries, function(c) { return d3.min(c.values, function(v) { return v.gdp - yaxis_padding; }); }),
+                d3.max(tseries, function(c) { return d3.max(c.values, function(v) { return v.gdp + yaxis_padding; }); })
             ]);
 
             svg.append("g")
@@ -350,10 +360,12 @@
                     d3.select(this.parentNode)
                         .append("text")
                         .attr("x", function(d) {
-                            return x(d.values[0].idx) - 200;
+                            var text_x = x(d.values[0].idx) - 150;
+                                if (text_x < 0) {text_x = 0}
+                                return text_x;
                         })
                         .attr("y", function(d) {
-                            return y(d.values[0].gdp);
+                            return y(d.values[0].gdp) + 10;
                         })
                         .attr("dx", 5)
                         .attr("dy", 10)
@@ -363,7 +375,7 @@
                             " : £" + d.values[0].gdp
                         );
 
-
+                    d3.select('#house_number').text("House number/name : " + d.name);
                     d3.select(this.parentNode).moveToFront()
 
                 })
@@ -371,6 +383,7 @@
 
                     d3.selectAll('.line').style("stroke-opacity", "1");
                     d3.selectAll('.point').style("fill-opacity", "1");
+                    d3.select('#house_number').text(" ");
 
                     d3.select(this.parentNode)
                         .selectAll("text")
@@ -378,7 +391,6 @@
                         .style("opacity", 0)
                         .transition()
                         .remove();
-
                 });
 
 
@@ -412,6 +424,7 @@
                     for(var a in d.values){
                         d3.select(this.parentNode)
                             .append("circle")
+                            .attr("class", "data_point")
                             .attr("cx", function(d) {
                                 return x(d.values[a].idx);
                             })
@@ -424,10 +437,12 @@
                         d3.select(this.parentNode)
                             .append("text")
                             .attr("x", function(d) {
-                                return x(d.values[a].idx) - 200;
+                                var text_x = x(d.values[a].idx) - 150;
+                                if (text_x < 0) {text_x = 0}
+                                return text_x;
                             })
                             .attr("y", function(d) {
-                                return y(d.values[a].gdp);
+                                return y(d.values[a].gdp) + 10;
                             })
                             .attr("dx", 5)
                             .attr("dy", 10)
@@ -440,8 +455,7 @@
 
                     }
                     d3.select('#house_number').text("House number/name : " + d.name);
-
-                    d3.select(this.parentNode).moveToFront()
+                    d3.select(this.parentNode).moveToFront();
 
                 })
                 .on("mouseleave", function(d) {
@@ -471,16 +485,35 @@
                         .style("stroke", function(d) { return color(d.name); })
 
                 });
-
-
-
         }
+
+        function catchEnterPress(event) {
+            if (event.which == 13 || event.keyCode == 13) {
+                changeFormAction()
+                return false;
+            }
+            return true;
+        }
+
+        function changeFormAction() {
+            var item = document.getElementById("item").value;
+            var url_to_use = "{% url 'sparql' 'replace_me' %}".replace('replace_me', item);
+            window.location.replace(url_to_use);
+        }
+
     </script>
+
+    <h1 class="postcode" id="postcode">Showing sale price data for {{ postcode }}</h1>
+
+    <label for="item"></label>
+    <input type="text" id="item" onkeypress="catchEnterPress(event)" value="{{ postcode }}">
+    <button type="button" id="update_postcode_btn" onclick=changeFormAction()>Submit</button>
 
     <div class="house_number" id="house_number"></div>
     <div id="line_graph"></div>
 
     <h1>Results</h1>
+    <label for="results"></label>
     <textarea id="results" style="width:500px;height:300px">
       Results will appear here.
     </textarea>
@@ -490,38 +523,3 @@
 
 
 {% endblock %}
-
-
-{#prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>#}
-{#prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>#}
-{#prefix owl: <http://www.w3.org/2002/07/owl#>#}
-{#prefix xsd: <http://www.w3.org/2001/XMLSchema#>#}
-{#prefix sr: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/>#}
-{#prefix ukhpi: <http://landregistry.data.gov.uk/def/ukhpi/>#}
-{#prefix lrppi: <http://landregistry.data.gov.uk/def/ppi/>#}
-{#prefix skos: <http://www.w3.org/2004/02/skos/core#>#}
-{#prefix lrcommon: <http://landregistry.data.gov.uk/def/common/>#}
-{##}
-{## Returns the Price Paid data from the default graph for each transaction record having#}
-{## an address with the given postcode.#}
-{## The postcode to query is set using SPARQL 1.1's 'values' clause#}
-{##}
-{#SELECT ?paon ?saon ?street ?town ?county ?postcode ?amount ?date ?category#}
-{#WHERE#}
-{#{#}
-{#  VALUES ?postcode {"PL6 8RU"^^xsd:string}#}
-{##}
-{#  ?addr lrcommon:postcode ?postcode.#}
-{##}
-{#  ?transx lrppi:propertyAddress ?addr ;#}
-{#          lrppi:pricePaid ?amount ;#}
-{#          lrppi:transactionDate ?date ;#}
-{#          lrppi:transactionCategory/skos:prefLabel ?category.#}
-{##}
-{#  OPTIONAL {?addr lrcommon:county ?county}#}
-{#  OPTIONAL {?addr lrcommon:paon ?paon}#}
-{#  OPTIONAL {?addr lrcommon:saon ?saon}#}
-{#  OPTIONAL {?addr lrcommon:street ?street}#}
-{#  OPTIONAL {?addr lrcommon:town ?town}#}
-{# } #}
-{#ORDER BY ?amount#}
