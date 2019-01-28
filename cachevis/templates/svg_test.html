@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block page_name %}{% trans 'SVG Test' %}{% endblock %}
+
+{% block main %}
+
+    <style>
+        .paths {
+            fill: #0000ff;
+            fill-opacity: 0.7
+        }
+    </style>
+
+    <svg width="700" height="700">
+        <text style="font-size: 15px;
+    fill: #ff00ff;
+    background-color: whitesmoke"
+              x="20" y="20">SVG Test words</text>
+
+        <g class="path_collection" transform="translate(350, 150)">
+
+            <path class="paths" d="M10 10 C 20 20 180 180 20 200"></path>
+
+            <path style="fill: transparent; stroke: black; stroke-width: 10px"
+                  d="M10 10 C 20 20 180 180 20 200"></path>
+
+
+            <circle r="5" cx="0" cy="0" style="fill: black"></circle>
+
+            <path style="fill: #123456" class="paths" d="
+            M67, -67
+
+            C80, -54,
+            59, -40,
+            77, 0
+            "></path>
+
+            <path style="fill: #315839" class="paths" d="
+            M77, 0
+
+            C95, 40,
+            189, 139,
+            176, 176
+            "></path>
+
+            <path style="fill: #528624" class="paths" d="
+            M176, 176
+
+            C163, 213,
+            29, 252,
+            0, 223
+            "></path>
+
+            <path style="fill: #672312" class="paths" d="
+            M0, 223
+
+            C-29, 193,
+            -0, 37,
+            -0, 0
+            "></path>
+
+            <path style="fill: #534275" class="paths" d="
+            M0, 0
+
+            C-0, -37,
+            -0, 0,
+            -0, 0
+            "></path>
+
+            <path style="fill: #876673" class="paths" d="
+            M0, 0
+
+            C-0, -0,
+            -0, 12,
+            -0, -0
+            "></path>
+
+            <path style="fill: #324342" class="paths" d="
+            M0, 0
+
+            C0, -12,
+            -11, -66,
+            0, -77
+            "></path>
+
+            <path style="fill: #00ffff; fill-opacity: 0.3" class="paths" d="
+            M0, -77
+
+            C11, -88,
+            54, -80,
+            67, -67
+            "></path>
+
+        </g>
+    </svg>
+
+{% endblock %}

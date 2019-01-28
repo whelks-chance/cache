@@ -8,28 +8,10 @@
 
     {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>#}
     {#    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />#}
-    <script src="{% static 'urlEncode.js' %}"></script>
-    <script src="{% static 'jquery.sparql.js' %}"></script>
-    <script src="{% static 'urlEncode.js' %}"></script>
     <script src="{% static 'd3/d3.js' %}"></script>
-    <script src="{% static 'moment-with-locales.js' %}"></script>
-
+    <script src="{% static 'moment/moment-with-locales.min.js' %}"></script>
 
     <script>
-        {#        d3.selection.prototype.moveToFront = function() {#}
-        {#            return this.each(function(){#}
-        {#                this.parentNode.appendChild(this);#}
-        {#            });#}
-        {#        };#}
-        {#        d3.selection.prototype.moveToBack = function() {#}
-        {#            return this.each(function() {#}
-        {#                var firstChild = this.parentNode.firstChild;#}
-        {#                if (firstChild) {#}
-        {#                    this.parentNode.insertBefore(this, firstChild);#}
-        {#                }#}
-        {#            });#}
-        {#        };#}
-
 
         {#        var query = 'SELECT * WHERE {?s ?p ?o} LIMIT 10';#}
 
@@ -96,10 +78,9 @@
             url: url,
             data: {query: query},
             success: function(data) {
-                {#			alert('success: ' + data.results.bindings.length + ' results');#}
                 console.log(data);
 
-                $('#results').text(JSON.stringify(data, null, 2));
+                $('#results').text(JSON.stringify(data, null, 4));
 
                 var clean_data = [
                     {
@@ -122,7 +103,7 @@
                 ];
 
                 var item_name_key = 'paon';
-                var item_value_key = 'amount'
+                var item_value_key = 'amount';
 
                 {#                                                var item_name_key = 'region';#}
                 {#                                                var item_value_key = 'hpi';#}
@@ -173,20 +154,15 @@
                 data_by_year.push(current_year_data);
 
                 console.log(current_year);
-
                 console.log(data_by_year);
 
                 build_linechart(data_by_year)
-
             },
-            complete: function(){
-
-            }
+            complete: function(){}
 
         });
 
     </script>
-
 
     <style> /* set the CSS */
 
@@ -212,6 +188,10 @@
 
     .data_point {
         pointer-events: none;
+    }
+
+    input:hover {
+        background-color: darkgray;
     }
 
     </style>
@@ -419,7 +399,7 @@
                         .transition()
                         .ease(d3.easeElastic)
                         .style("stroke-width", "5px")
-                        .style("stroke-opacity", "1")
+                        .style("stroke-opacity", "1");
 
                     for(var a in d.values){
                         d3.select(this.parentNode)
@@ -432,7 +412,7 @@
                                 return y(d.values[a].gdp);
                             })
                             .attr("r", 8)
-                            .attr("fill", function(d) { return color(d.name); })
+                            .attr("fill", function(d) { return color(d.name); });
 
                         d3.select(this.parentNode)
                             .append("text")
@@ -448,7 +428,6 @@
                             .attr("dy", 10)
                             .attr("class", "rollover_text")
                             .text(
-                                {#                                d.name + ' : ' +#}
                                 moment(d.values[a].idx).format('Do MMM YY') +
                                 " : £" + d.values[a].gdp
                             );
@@ -489,7 +468,7 @@
 
         function catchEnterPress(event) {
             if (event.which == 13 || event.keyCode == 13) {
-                changeFormAction()
+                changeFormAction();
                 return false;
             }
             return true;
@@ -505,21 +484,20 @@
 
     <h1 class="postcode" id="postcode">Showing sale price data for {{ postcode }}</h1>
 
-    <label for="item"></label>
+    <label for="item">Search for postcode</label>
     <input type="text" id="item" onkeypress="catchEnterPress(event)" value="{{ postcode }}">
-    <button type="button" id="update_postcode_btn" onclick=changeFormAction()>Submit</button>
+    <button type="button"
+            class="btn btn-secondary"
+            id="update_postcode_btn"
+            onclick=changeFormAction()>Submit</button>
 
     <div class="house_number" id="house_number"></div>
     <div id="line_graph"></div>
 
     <h1>Results</h1>
     <label for="results"></label>
-    <textarea id="results" style="width:500px;height:300px">
+    <textarea id="results" style="width:70vw;height:70vh">
       Results will appear here.
     </textarea>
-
-
-    <p><a id="run_sparql" href="#">Run Me</a></p>
-
 
 {% endblock %}
