@@ -13,6 +13,30 @@
 
     <script>
 
+    	var jsonp_query = 'SELECT * WHERE {?s ?p ?o} LIMIT 10';
+
+        $.ajax({
+            url: "http://landregistry.data.gov.uk/landregistry/query",
+            method: 'POST',
+
+            // The name of the callback parameter
+            jsonp: "callback",
+
+            // Tell jQuery we're expecting JSONP
+            dataType: "jsonp",
+
+            data: {query: jsonp_query},
+
+            // Work with the response
+            success: function( response ) {
+                console.log( 'jsonp response' ); // server response
+                console.log( response ); // server response
+            }
+        });
+    </script>
+
+    <script>
+
         {#        var query = 'SELECT * WHERE {?s ?p ?o} LIMIT 10';#}
 
         {#        var query = "prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" +#}
@@ -122,7 +146,15 @@
 
                     if(dat['saon']) {
                         item_name += " " + dat['saon']['value']
-                    }  //
+                    }
+
+                    if(dat['street']) {
+                        item_name += ", " + dat['street']['value']
+                    }
+
+                    if(dat['town']) {
+                        item_name += ", " + dat['town']['value']
+                    }
 
                     // If we haven't seen this address before, backfill previous years with NaN's
                     if (seen_item_names.indexOf(item_name) === -1){
@@ -211,11 +243,11 @@
             console.log(data);
 
             // define margins
-            var margin = {top: 20, right: 80, bottom: 30, left: 150};
+            var margin = {top: 20, right: $(window).width() * 0.05, bottom: 30, left: $(window).width() * 0.05};
 
 // graphics size without axis
-            var width = 960 - margin.left - margin.right;
-            var height = 500 - margin.top - margin.bottom;
+            var width = $(window).width() * 0.7 - margin.left - margin.right;
+            var height = $(window).height() * 0.7 - margin.top - margin.bottom;
 
             var svg = d3.select("#line_graph").append("svg")
                 .attr("width", width + margin.left + margin.right)
@@ -341,8 +373,8 @@
                         .append("text")
                         .attr("x", function(d) {
                             var text_x = x(d.values[0].idx) - 150;
-                                if (text_x < 0) {text_x = 0}
-                                return text_x;
+                            if (text_x < 0) {text_x = 0}
+                            return text_x;
                         })
                         .attr("y", function(d) {
                             return y(d.values[0].gdp) + 10;
@@ -484,14 +516,20 @@
 
     <h1 class="postcode" id="postcode">Showing sale price data for {{ postcode }}</h1>
 
-    <label for="item">Search for postcode</label>
-    <input type="text" id="item" onkeypress="catchEnterPress(event)" value="{{ postcode }}">
-    <button type="button"
-            class="btn btn-secondary"
-            id="update_postcode_btn"
-            onclick=changeFormAction()>Submit</button>
+    <div style="display: flex; flex-flow: column">
+        <div>
+            <label for="item">Search for postcode</label>
+            <input type="text" id="item" onkeypress="catchEnterPress(event)" value="{{ postcode }}">
+            <button type="button"
+                    class="btn btn-secondary"
+                    id="update_postcode_btn"
+                    onclick=changeFormAction()>Submit</button>
+        </div>
 
-    <div class="house_number" id="house_number"></div>
+
+        <div class="house_number" id="house_number"></div>
+    </div>
+
     <div id="line_graph"></div>
 
     <h1>Results</h1>
